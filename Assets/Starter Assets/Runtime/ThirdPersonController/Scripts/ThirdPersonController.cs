@@ -3,9 +3,6 @@ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
-
-
-
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
  */
 
@@ -115,6 +112,7 @@ namespace StarterAssets
         
         
         [SerializeField] private Reversible _reversible;
+        [SerializeField] private AnimationRewindPlayer _animationRewindPlayer;
 
         private bool IsCurrentDeviceMouse
         {
@@ -156,6 +154,8 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            
+            _animationRewindPlayer = GetComponent<AnimationRewindPlayer>();
         }
 
 
@@ -163,6 +163,7 @@ namespace StarterAssets
         private float currentRewindTime;
         private float rewindSpeed = 1f;
         private bool _isReversing;
+        [SerializeField] private AnimationRewindPlayer _rewindAnimation;
         
         /// REWINDING
        private void StartRewind()
@@ -172,6 +173,8 @@ namespace StarterAssets
         currentRewindTime = _reversible.Snapshots[_reversible.Snapshots.Count - 1].time;  // rewind from the most recent snapshot
         _isReversing = true;
         _reversible.IsReversing = true;
+        _animationRewindPlayer.OnRewindStart();
+    //    string currentStateName = _animator.GetAnimatorStateName(stateInfo.fullPathHash); // Custom extension method needed for this
     }
 
 
@@ -179,6 +182,7 @@ namespace StarterAssets
         {
             _isReversing = false;
             _controller.enabled = true;
+            _animationRewindPlayer.StopRewind();
         }
 
         private void ApplyRewind(float currentRewindTime)
@@ -198,13 +202,13 @@ namespace StarterAssets
                 }
             }
         }
-
      
         
         private void Update()
         {
-            if ( Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R))
             {
+                Debug.Log($"[GetKeyDown] (KeyCode.R");
                 StartRewind();
             }
             
@@ -223,10 +227,6 @@ namespace StarterAssets
                 }
 
                 ApplyRewind(currentRewindTime);
-            
-
-          
-          
 
                 /*_controller.enabled = false;
                 Snapshot a = _reversible.Snapshots[i];
