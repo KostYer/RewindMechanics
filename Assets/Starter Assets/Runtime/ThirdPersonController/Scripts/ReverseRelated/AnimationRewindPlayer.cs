@@ -61,7 +61,6 @@ namespace ReverseRelated
         
         private List<AnimationClipPlayable> _animationClipPlayablesCurrent = new();
         
-        
         private PlayableGraph graph;
         private AnimationPlayableOutput playableOutput;
         private AnimationMixerPlayable playableMixer;
@@ -72,7 +71,6 @@ namespace ReverseRelated
         {
             _dataStorageSO.FillDictionary();
             _animationController = animator.runtimeAnimatorController;
-         
         }
 
         void Start()
@@ -87,21 +85,62 @@ namespace ReverseRelated
             animator = GetComponent<Animator>();
         }
 
-
         public void OnRewindStart()
         {
-          //  Debug.Log($"[OnRewindStart] anim controller is null {animator.runtimeAnimatorController == null}");
-        
             IsRewinding = true;
             
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             RecordAnimSnapshot(stateInfo, true);
             animator.runtimeAnimatorController = null;
-          //  animator.enabled = true;  
             AnimateRewind();
         }
+        
+        public void StopRewind()
+        {
+            Debug.Log($"[StopRewind]");
+            IsRewinding = false;
 
-        private void AnimateRewind()
+            CreateAnimSnapshot(animator.GetCurrentAnimatorStateInfo(0));
+            animator.runtimeAnimatorController = _animationController;
+        }
+        
+        private void CreateAnimationPlayables(int nameHash)
+        {
+            // Destroy previous mixer if any
+            if (playableMixer.IsValid())
+                playableMixer.Destroy();
+
+            var clips = _dataStorageSO.StatesDictionary[nameHash].Clips;
+
+            // Create a new mixer with correct number of inputs
+            playableMixer = AnimationMixerPlayable.Create(graph, clips.Count, true);
+
+            _animationClipPlayablesCurrent.Clear();
+            for (int i = 0; i < clips.Count; i++)
+            {
+                var clipPlayableCurrent = AnimationClipPlayable.Create(graph, clips[i]);
+                clipPlayableCurrent.SetSpeed(-1f);
+                Debug.Log($"[CreateAnimationPlayables] clip {i}, len: {clips[i].length}");
+                graph.Connect(clipPlayableCurrent, 0, playableMixer, i);
+                _animationClipPlayablesCurrent.Add(clipPlayableCurrent);
+            }
+        }
+
+        private bool IsStateBlendTree(int hash)
+        {
+            if (!_dataStorageSO.StatesDictionary.ContainsKey(hash))
+            {
+                Debug.LogError($"[AnimationRewindPlayer] IsStateBlendTree. hash {hash} is not in the dictionary");
+                return false;
+            }
+
+            return _dataStorageSO.StatesDictionary[hash].IsTree;
+        }
+
+
+        #region Rewind logic
+
+          private void AnimateRewind()
         {
             if (_animSnapshots.Count == 0)
             {
@@ -119,13 +158,8 @@ namespace ReverseRelated
             playableOutput.SetSourcePlayable(playableMixer);
             
             currentSnapshotIndex = Mathf.Max(_animSnapshots.Count - 1, 0);
-            Debug.Log($"[currentSnapshotIndex] {currentSnapshotIndex}");
-        //   playableMixer.SetInputWeight(2, 1f);
+       
             graph.Play();
-        //     _animationClipPlayablesCurrent[0].SetTime(0.5f * _animationClipPlayablesCurrent[0].GetAnimationClip().length);
-            // _animationClipPlayablesCurrent[0].SetTime(-1f);
-         //   _animationClipPlayablesCurrent[0].Pause();
-         
             StartCoroutine(RewindCoroutine());
         }
 
@@ -173,11 +207,9 @@ namespace ReverseRelated
 
                 yield return null;
             }
-
-          //  StopRewind();
+ 
         }
 
-        private float blendValueDebug;
         private float GetBlendValueAtTime(List<BlendChange> blendChanges, float rewindTime)
         {
             if (blendChanges == null || blendChanges.Count == 0)
@@ -192,12 +224,9 @@ namespace ReverseRelated
 
                     float t = Mathf.InverseLerp(from.realTime, to.realTime, rewindTime);
 
-                    blendValueDebug = Mathf.Lerp(from.blendValue, to.blendValue, t);
                     return Mathf.Lerp(from.blendValue, to.blendValue, t);
                 } 
             }
-
-            blendValueDebug = -1 * blendChanges[0].blendValue;
             return blendChanges[0].blendValue; // fallback
         }
         
@@ -250,74 +279,11 @@ namespace ReverseRelated
             }
         }
 
-        public void StopRewind()
-        {
-            Debug.Log($"[StopRewind]");
-            IsRewinding = false;
 
-            CreateAnimSnapshot(animator.GetCurrentAnimatorStateInfo(0));
-            animator.runtimeAnimatorController = _animationController;
-        }
+        #endregion Rewind logic
 
-        public void OnAnimationStateEnter(AnimatorStateInfo stateInfo)
-        {
-            if(IsRewinding) return;
-            CreateAnimSnapshot(stateInfo);
-            Debug.Log($"[AnimationRewindPlayer] OnAnimationStateEnter {stateInfo}");
-            
-            IsInBlendState= IsStateBlendTree(stateInfo.shortNameHash);
-            
-            thresholds = _dataStorageSO.StatesDictionary[stateInfo.shortNameHash].Thresholds;
-            
-            Debug.Log($"[AnimationRewindPlayer] IsCurrentState blend tree {IsInBlendState} (stateHash {stateInfo.shortNameHash})");
-            CreateAnimationPlayables(stateInfo.shortNameHash);
-        }
 
-        private void CreateAnimationPlayables(int nameHash)
-        {
-            // Destroy previous mixer if any
-            if (playableMixer.IsValid())
-                playableMixer.Destroy();
-
-            var clips = _dataStorageSO.StatesDictionary[nameHash].Clips;
-
-            // Create a new mixer with correct number of inputs
-            playableMixer = AnimationMixerPlayable.Create(graph, clips.Count, true);
-
-            _animationClipPlayablesCurrent.Clear();
-            for (int i = 0; i < clips.Count; i++)
-            {
-                var clipPlayableCurrent = AnimationClipPlayable.Create(graph, clips[i]);
-                clipPlayableCurrent.SetSpeed(-1f);
-                Debug.Log($"[CreateAnimationPlayables] clip {i}, len: {clips[i].length}");
-                graph.Connect(clipPlayableCurrent, 0, playableMixer, i);
-                _animationClipPlayablesCurrent.Add(clipPlayableCurrent);
-            }
-
-            // Reassign output to the new mixer
-         //   var playableOutput = (AnimationPlayableOutput)graph.GetOutput(0);
-         //   playableOutput.SetSourcePlayable(playableMixer);
-        }
-
-        private bool IsStateBlendTree(int hash)
-        {
-
-            if (!_dataStorageSO.StatesDictionary.ContainsKey(hash))
-            {
-                Debug.LogError($"[AnimationRewindPlayer] IsStateBlendTree. hash {hash} is not in the dictionary");
-                return false;
-            }
-
-            return _dataStorageSO.StatesDictionary[hash].IsTree;
-
-        }
-
-        public void OnAnimationStateExit(AnimatorStateInfo stateInfo)
-        {
-            if(IsRewinding) return;
-            RecordAnimSnapshot(stateInfo);
-            Debug.Log($"[AnimationRewindPlayer] OnAnimationStateExit {stateInfo}");
-        }
+        #region Recording logic
 
         private void CreateAnimSnapshot(AnimatorStateInfo stateInfo)
         {
@@ -337,10 +303,8 @@ namespace ReverseRelated
             snapshot.isLast = isLast;
 
             _animSnapshots.Add(snapshot);
-             _currentSnapshot = null;
+            _currentSnapshot = null;
         }
-
-
 
         ///blend trees recordings
         private List<float> thresholds = new();
@@ -370,29 +334,47 @@ namespace ReverseRelated
                 }
             }
         }
+
+        #endregion Recording logic
         
         
-        int GetCurrentRegionIndex(float speed, List<float> thresholds)
+        #region States change
+        
+        public void OnAnimationStateEnter(AnimatorStateInfo stateInfo)
         {
-            for (int i = thresholds.Count - 1; i >= 0; i--)
-            {
-                if (speed >= thresholds[i])
-                    return i;
-            }
-            return 0; // default to lowest
+            if(IsRewinding) return;
+            CreateAnimSnapshot(stateInfo);
+            Debug.Log($"[AnimationRewindPlayer] OnAnimationStateEnter {stateInfo}");
+            
+            IsInBlendState= IsStateBlendTree(stateInfo.shortNameHash);
+            
+            thresholds = _dataStorageSO.StatesDictionary[stateInfo.shortNameHash].Thresholds;
+            
+            Debug.Log($"[AnimationRewindPlayer] IsCurrentState blend tree {IsInBlendState} (stateHash {stateInfo.shortNameHash})");
+            CreateAnimationPlayables(stateInfo.shortNameHash);
         }
-        
-        
-     //   public string uiText = "Hello, Unity!"; // The text you want to display
+
+        public void OnAnimationStateExit(AnimatorStateInfo stateInfo)
+        {
+            if(IsRewinding) return;
+            RecordAnimSnapshot(stateInfo);
+            Debug.Log($"[AnimationRewindPlayer] OnAnimationStateExit {stateInfo}");
+        }
+        #endregion States change
+      
+       
+       
+
+      
+
+     
+    
         public int fontSize = 24;               // Font size for better visibility
         public Color textColor = Color.white;   // Color of the text
         private GUIStyle textStyle; 
         
-        
-        
         void OnGUI()
         {
-          
             // Initialize the GUIStyle when the script is enabled
             textStyle = new GUIStyle();
             textStyle.fontSize = fontSize;
@@ -400,7 +382,6 @@ namespace ReverseRelated
             // Align text to top-right
             textStyle.alignment = TextAnchor.UpperRight;
             
-            // Calculate the rectangle for the text
             // X position: Start from Screen.width and subtract enough space for the text itself.
             // Y position: Start from a small margin from the top (e.g., 10 pixels).
             // Width: Give it enough width to contain your text.
