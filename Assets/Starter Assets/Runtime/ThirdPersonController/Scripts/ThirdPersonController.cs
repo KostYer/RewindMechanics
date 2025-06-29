@@ -164,11 +164,14 @@ namespace StarterAssets
         private float rewindSpeed = 1f;
         private bool _isReversing;
         [SerializeField] private AnimationRewindPlayer _rewindAnimation;
-        
+        [SerializeField] private float _debugTimeScale = 1f;
+
+
         /// REWINDING
        private void StartRewind()
-        {
-            _controller.enabled = false;
+       { 
+           Time.timeScale = _debugTimeScale;
+        _controller.enabled = false;
         rewindStartTime = Time.time;                      // current Unity time
         currentRewindTime = _reversible.Snapshots[_reversible.Snapshots.Count - 1].time;  // rewind from the most recent snapshot
         _isReversing = true;
@@ -180,6 +183,7 @@ namespace StarterAssets
 
         private void StopRewind()
         {
+            Time.timeScale = 1;
             _isReversing = false;
             _controller.enabled = true;
             _animationRewindPlayer.StopRewind();

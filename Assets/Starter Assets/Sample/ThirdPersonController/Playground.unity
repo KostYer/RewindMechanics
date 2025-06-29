@@ -928,6 +928,11 @@ PrefabInstance:
       propertyPath: _reversible
       value: 
       objectReference: {fileID: 1762682266}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: _debugTimeScale
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -998,9 +1003,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1762682271}
   _animSnapshots: []
-  clip: {fileID: 0}
+  _currentSnapshot:
+    stateHash: 0
+    realTimeStarted: 0
+    normalStartTime: 0
+    normalEndTime: 0
+    blendChanges: []
   IsRewinding: 0
   _dataStorageSO: {fileID: 11400000, guid: a7169a9132d962c4d9783971fc186a2e, type: 2}
+  IsGameBlendTree: 0
+  _animationController: {fileID: 0}
+  fontSize: 24
+  textColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1764214107
 GameObject:
   m_ObjectHideFlags: 0
