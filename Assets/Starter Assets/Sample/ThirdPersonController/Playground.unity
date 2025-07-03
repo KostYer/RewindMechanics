@@ -931,7 +931,22 @@ PrefabInstance:
     - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544,
         type: 3}
       propertyPath: _debugTimeScale
-      value: 1
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: _rewindAnimation
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: animationRewindPlayer
+      value: 
+      objectReference: {fileID: 1762682278}
+    - target: {fileID: 4416926081852918490, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: animationRewindPlayerOld
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -944,7 +959,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1762682272}
+      addedObject: {fileID: 1762682273}
+    - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1762682278}
+    - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1762682279}
   m_SourcePrefab: {fileID: 100100000, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
 --- !u!114 &1762682259 stripped
 MonoBehaviour:
@@ -989,7 +1012,7 @@ Animator:
     type: 3}
   m_PrefabInstance: {fileID: 1762682258}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1762682272
+--- !u!114 &1762682273
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -998,23 +1021,57 @@ MonoBehaviour:
   m_GameObject: {fileID: 1742640379}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e6ca57c1ad3488799d4fb6c8a0780de, type: 3}
+  m_Script: {fileID: 11500000, guid: b7e9e2d0006d46c7abe64ad06646c93a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsGameBlendTree: 0
+  _dataStorageSO: {fileID: 11400000, guid: a7169a9132d962c4d9783971fc186a2e, type: 2}
   animator: {fileID: 1762682271}
-  _animSnapshots: []
   _currentSnapshot:
     stateHash: 0
     realTimeStarted: 0
     normalStartTime: 0
     normalEndTime: 0
     blendChanges: []
+--- !u!114 &1762682278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742640379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2c98537daad42abb79e05d40babb7dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1762682271}
   IsRewinding: 0
   _dataStorageSO: {fileID: 11400000, guid: a7169a9132d962c4d9783971fc186a2e, type: 2}
-  IsGameBlendTree: 0
-  _animationController: {fileID: 0}
-  fontSize: 24
-  textColor: {r: 1, g: 1, b: 1, a: 1}
+  animationRecorder: {fileID: 1762682273}
+  playablesController: {fileID: 1762682279}
+  _animationController: {fileID: 9100000, guid: 40db3173a05ae3242b1c182a09b0a183,
+    type: 2}
+--- !u!114 &1762682279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1742640379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 554c8b20f0b9499c988375fd91b8cc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1762682271}
+  _dataStorageSO: {fileID: 11400000, guid: a7169a9132d962c4d9783971fc186a2e, type: 2}
+  _activeState:
+    hashName: 0
+    index: 0
+  _oldState:
+    hashName: 0
+    index: 0
 --- !u!1 &1764214107
 GameObject:
   m_ObjectHideFlags: 0

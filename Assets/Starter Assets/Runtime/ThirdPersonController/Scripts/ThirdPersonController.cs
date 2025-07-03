@@ -1,5 +1,6 @@
 ﻿using ReverseRelated;
 using UnityEngine;
+using UnityEngine.Serialization;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -112,7 +113,10 @@ namespace StarterAssets
         
         
         [SerializeField] private Reversible _reversible;
-        [SerializeField] private AnimationRewindPlayer _animationRewindPlayer;
+     
+       [SerializeField] private AnimationRewindController animationRewindPlayer;
+
+
 
         private bool IsCurrentDeviceMouse
         {
@@ -155,7 +159,7 @@ namespace StarterAssets
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
             
-            _animationRewindPlayer = GetComponent<AnimationRewindPlayer>();
+          //  animationRewindPlayer = GetComponent<AnimationRewindPlayerOLD>();
         }
 
 
@@ -163,7 +167,7 @@ namespace StarterAssets
         private float currentRewindTime;
         private float rewindSpeed = 1f;
         private bool _isReversing;
-        [SerializeField] private AnimationRewindPlayer _rewindAnimation;
+    //    [SerializeField] private AnimationRewindPlayerOLD _rewindAnimation;
         [SerializeField] private float _debugTimeScale = 1f;
 
 
@@ -176,7 +180,7 @@ namespace StarterAssets
         currentRewindTime = _reversible.Snapshots[_reversible.Snapshots.Count - 1].time;  // rewind from the most recent snapshot
         _isReversing = true;
         _reversible.IsReversing = true;
-        _animationRewindPlayer.OnRewindStart();
+        animationRewindPlayer.OnRewindStart();
     //    string currentStateName = _animator.GetAnimatorStateName(stateInfo.fullPathHash); // Custom extension method needed for this
     }
 
@@ -186,7 +190,7 @@ namespace StarterAssets
             Time.timeScale = 1;
             _isReversing = false;
             _controller.enabled = true;
-            _animationRewindPlayer.StopRewind();
+            animationRewindPlayer.OnRewindStop();
         }
 
         private void ApplyRewind(float currentRewindTime)

@@ -12,7 +12,7 @@ namespace StarterAssets.ScriptableData
         
         private Dictionary<int, AnimationStateData> _statesDictionary = new ();
         public Dictionary<int, AnimationStateData> StatesDictionary => _statesDictionary;
-
+        
          
         public void AddStateData(List<AnimationStateData> sd)
         {
