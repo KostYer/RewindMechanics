@@ -110,11 +110,10 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
-        
-        
-        [SerializeField] private Reversible _reversible;
-     
-       [SerializeField] private AnimationRewindController animationRewindPlayer;
+  
+       [SerializeField] private Rewinder _rewinder;
+
+
 
 
 
@@ -170,46 +169,7 @@ namespace StarterAssets
     //    [SerializeField] private AnimationRewindPlayerOLD _rewindAnimation;
         [SerializeField] private float _debugTimeScale = 1f;
 
-
-        /// REWINDING
-       private void StartRewind()
-       { 
-           Time.timeScale = _debugTimeScale;
-        _controller.enabled = false;
-        rewindStartTime = Time.time;                      // current Unity time
-        currentRewindTime = _reversible.Snapshots[_reversible.Snapshots.Count - 1].time;  // rewind from the most recent snapshot
-        _isReversing = true;
-        _reversible.IsReversing = true;
-        animationRewindPlayer.OnRewindStart();
-    //    string currentStateName = _animator.GetAnimatorStateName(stateInfo.fullPathHash); // Custom extension method needed for this
-    }
-
-
-        private void StopRewind()
-        {
-            Time.timeScale = 1;
-            _isReversing = false;
-            _controller.enabled = true;
-            animationRewindPlayer.OnRewindStop();
-        }
-
-        private void ApplyRewind(float currentRewindTime)
-        {
-            for (int i = _reversible.Snapshots.Count - 1; i > 0; i--)
-            {
-                if (_reversible.Snapshots[i - 1].time <= currentRewindTime &&
-                    currentRewindTime <= _reversible.Snapshots[i].time)
-                {
-                    var a = _reversible.Snapshots[i];
-                    var b = _reversible.Snapshots[i - 1];
-
-                    float t = Mathf.InverseLerp(a.time, b.time, currentRewindTime);
-                    transform.position = Vector3.Lerp(a.position, b.position, t);
-                    transform.rotation = Quaternion.Slerp(a.rotation, b.rotation, t);
-                    break;
-                }
-            }
-        }
+ 
      
         
         private void Update()
@@ -217,46 +177,23 @@ namespace StarterAssets
             if (Input.GetKeyDown(KeyCode.R))
             {
                 Debug.Log($"[GetKeyDown] (KeyCode.R");
-                StartRewind();
+               _rewinder.StartRewind();
             }
             
             else if (Input.GetKeyUp(KeyCode.R))
             {
-                StopRewind();
+                _rewinder.StopRewind();
             }
 
-            if (_isReversing) {
-                currentRewindTime -= Time.deltaTime * rewindSpeed;
-
-                // Stop when we reach the beginning of recorded data
-                if (currentRewindTime <= _reversible.Snapshots[0].time) {
-                    currentRewindTime = _reversible.Snapshots[0].time;
-                    StopRewind();
-                }
-
-                ApplyRewind(currentRewindTime);
-
-                /*_controller.enabled = false;
-                Snapshot a = _reversible.Snapshots[i];
-                Snapshot b = _reversible.Snapshots[i + 1];
-
-                float t = Mathf.InverseLerp(a.time, b.time, currentRewindTime);
-
-                transform.position = Vector3.Lerp(a.position, b.position, t);
-                transform.rotation = Quaternion.Slerp(a.rotation, b.rotation, t);*/
-            }
-            else
-            {
-                _reversible.IsReversing = false;
-                _controller.enabled = true;
+            if (_isReversing)  return;
+           
+              //  _reversible.IsReversing = false;
+             //   _controller.enabled = true;
                 _hasAnimator = TryGetComponent(out _animator);
 
                 JumpAndGravity();
                 GroundedCheck();
                 Move();
-            }
-
-          
         }
 
         private void LateUpdate()

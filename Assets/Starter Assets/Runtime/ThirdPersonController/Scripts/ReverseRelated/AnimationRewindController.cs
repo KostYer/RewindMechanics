@@ -12,7 +12,7 @@ namespace ReverseRelated
     {
         [SerializeField] private Animator animator;
       
-        public bool IsRewinding = false;
+        private bool IsRewinding = false;
         
         private float rewindStartTime;
         private float rewindDuration;
@@ -32,6 +32,14 @@ namespace ReverseRelated
         [SerializeField] private RuntimeAnimatorController  _animationController;
 
         private string _currentSnapshotName;
+        
+        
+        private Rewinder _rewinder;
+
+        public void Init(Rewinder rewinder)
+        {
+            _rewinder = rewinder;
+        }
 
         private void Start()
         {
@@ -55,13 +63,21 @@ namespace ReverseRelated
 
         public void OnRewindStop()
         {
+            Debug.Log($"[OnRewindStopOnRewindStop]");
             IsRewinding = false;
             animator.runtimeAnimatorController = _animationController;
             animationRecorder.OnRewindStop();
             
             playablesController.StopPLay();
-            rewindCTS.Cancel();
+
+            if (rewindCTS != null && !rewindCTS.IsCancellationRequested)
+            {
+                rewindCTS.Cancel();
+            }
+           
             rewindCTS.Dispose();
+            
+            
         }
 
         CancellationTokenSource rewindCTS = new CancellationTokenSource();
@@ -72,7 +88,7 @@ namespace ReverseRelated
             while (IsRewinding)
             {
                 
-                float targetTime = GetRewindTargetTime();
+                float targetTime = _rewinder.GetRewindTargetTime();
 
                 // Reached the beginning of recorded data
                 if (targetTime <= animationRecorder.AnimSnapshots[0].realTimeStarted)
@@ -108,11 +124,11 @@ namespace ReverseRelated
         
         
         
-        private float GetRewindTargetTime()
+        /*private float GetRewindTargetTime()
         {
             float elapsed = Time.time - rewindStartTime;
             return rewindStartTime - elapsed;
-        }
+        }*/
         
         private int GetCurrentSnapshotIndex(float targTime)
         {

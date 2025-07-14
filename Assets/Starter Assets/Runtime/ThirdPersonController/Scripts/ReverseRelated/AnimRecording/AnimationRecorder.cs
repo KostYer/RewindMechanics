@@ -13,7 +13,7 @@ namespace ReverseRelated.AnimRecording
         
         
         [SerializeField] private AnimationPlaybackSnapshot _currentSnapshot;
-         private List<AnimationPlaybackSnapshot> _animSnapshots = new List<AnimationPlaybackSnapshot>();
+        [SerializeField] private List<AnimationPlaybackSnapshot> _animSnapshots = new List<AnimationPlaybackSnapshot>();
         
         public List<AnimationPlaybackSnapshot> AnimSnapshots => _animSnapshots;
 
@@ -38,7 +38,8 @@ namespace ReverseRelated.AnimRecording
         public void OnRewindStop()
         {
             IsRewinding = false;
-            
+            _animSnapshots.Clear();
+            Debug.Log($"[AnimationRecorder] anim comtroller state : {animator.GetCurrentAnimatorStateInfo(0).shortNameHash}");
             CreateAnimSnapshot(animator.GetCurrentAnimatorStateInfo(0));
         }
 
@@ -70,7 +71,7 @@ namespace ReverseRelated.AnimRecording
         
         void Update()
         {
-            return;
+      
             const float SPEED_EPSILON = 0.05f; // small threshold
             
             if (!IsRewinding && IsGameBlendTree)
