@@ -5,8 +5,14 @@ namespace ReverseRelated
 {
     public class Rewinder: MonoBehaviour
     {
-        [SerializeField] private AnimationRewindController _animationRewindController;
+     //   [SerializeField] private AnimationRewindController _animationRewindController;
+        [SerializeField] private RawAnimationRewindController _rawAnimationRewindController;
+        
         [SerializeField] private TransformRewindController _transformRewindController;
+        [SerializeField] private SkinnedMeshRenderer  _skinnedMeshRenderer;
+        [SerializeField] private SkinnedMeshRenderer  _skinnedMeshRendererGhost;
+
+
          
         [SerializeField] private float _debugTimeScale = 1f;
 
@@ -21,8 +27,11 @@ namespace ReverseRelated
         
         private void Awake()
         {
-            _animationRewindController.Init(this);
+        //    _animationRewindController.Init(this);
+            _rawAnimationRewindController.Init(this);
             _transformRewindController.Init(this);
+            
+            _skinnedMeshRendererGhost.enabled = false;
         }
 
         private void Update()
@@ -42,12 +51,17 @@ namespace ReverseRelated
             
          
             rewindElapsed = 0f;
-      
+            _skinnedMeshRenderer.enabled = false;
+            _skinnedMeshRendererGhost.enabled = true;
+
+
+
           ////  _reversible.IsReversing = true;
          //   animationRewindPlayer.OnRewindStart();
             
             
-            _animationRewindController.OnRewindStart();
+         //   _animationRewindController.OnRewindStart();
+            _rawAnimationRewindController.OnRewindStart();
             _transformRewindController.OnRewindStart();
         }
         
@@ -57,9 +71,10 @@ namespace ReverseRelated
             _isReversing = false;
             //   _controller.enabled = true;
             //   animationRewindPlayer.OnRewindStop();
-            
-            
-            _animationRewindController.OnRewindStop();
+            _skinnedMeshRenderer.enabled = true;
+            _skinnedMeshRendererGhost.enabled = false;
+         //   _animationRewindController.OnRewindStop();
+            _rawAnimationRewindController.OnRewindStop();
             _transformRewindController.OnRewindStop();
         }
 

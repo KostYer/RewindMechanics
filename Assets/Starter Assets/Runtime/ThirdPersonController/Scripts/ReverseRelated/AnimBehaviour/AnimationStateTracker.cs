@@ -14,19 +14,19 @@ namespace ReverseRelated.AnimBehaviour
         {
             if (controller == null)
             {
-                controller =  animator.GetComponent<AnimationRecorder>();
+           //     controller =  animator.GetComponent<AnimationRecorder>();
             }
 
             
 
             //   var controller = animator.GetComponent<AnimationRecorder>();
-         controller.OnAnimationStateEnter(stateInfo);
+       //  controller.OnAnimationStateEnter(stateInfo);
         }
 
         public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
        //   var controller = animator.GetComponent<AnimationRecorder>();
-           controller.OnAnimationStateExit(stateInfo);
+       //    controller.OnAnimationStateExit(stateInfo);
         }
        
     }
