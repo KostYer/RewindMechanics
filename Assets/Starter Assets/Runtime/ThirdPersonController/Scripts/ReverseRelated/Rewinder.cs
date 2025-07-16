@@ -25,6 +25,8 @@ namespace ReverseRelated
         public float CurrentRewindTime => currentRewindTime;
         private float rewindElapsed;
         
+        private float rewindSpeed = .5f;
+        
         private void Awake()
         {
         //    _animationRewindController.Init(this);
@@ -43,7 +45,7 @@ namespace ReverseRelated
 
         public void StartRewind()
         {
-            Time.timeScale = _debugTimeScale;
+           // Time.timeScale = _debugTimeScale;
           //  _controller.enabled = false;
             rewindStartTime = Time.time;                      // current Unity time
           ///  currentRewindTime = _reversible.Snapshots[_reversible.Snapshots.Count - 1].time;  // rewind from the most recent snapshot CHANGE
@@ -88,7 +90,7 @@ namespace ReverseRelated
        
         public float GetRewindTargetTime()
         {
-            rewindElapsed += Time.unscaledDeltaTime;
+            rewindElapsed += Time.unscaledDeltaTime * rewindSpeed;;
             float targetTime = rewindStartTime - rewindElapsed;
 
             if (targetTime <= 0f) // or another limit

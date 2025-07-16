@@ -94,7 +94,7 @@ namespace ReverseRelated
             playableClip.SetDuration(clip.length);
            // playableClip.SetTime(0);
             playableClip.SetTime(clip.length);;
-            playableClip.SetSpeed(-1); // negative = rewind
+            playableClip.SetSpeed(-.5f); // negative = rewind
 
             output.SetSourcePlayable(playableClip);
             
