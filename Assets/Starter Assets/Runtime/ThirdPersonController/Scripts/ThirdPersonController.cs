@@ -1,4 +1,5 @@
 ﻿using ReverseRelated;
+using StarterAssets.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Serialization;
 #if ENABLE_INPUT_SYSTEM
@@ -111,7 +112,7 @@ namespace StarterAssets
 
         private bool _hasAnimator;
   
-       [SerializeField] private Rewinder _rewinder;
+       [FormerlySerializedAs("_rewinder")] [SerializeField] private PlayerRewinder playerRewinder;
 
 
 
@@ -137,6 +138,24 @@ namespace StarterAssets
             {
                 _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
             }
+
+            _rewindEventsChannel.OnRewindStart += OnRewindStart;
+            _rewindEventsChannel.OnRewindEnd += OnRewindEnd;
+            _rewindEventsChannel.OnRewindTick += OnRewindTick;
+        }
+
+        private void OnRewindStart()
+        {
+            Debug.Log($"[ThirdPersonControllerRewind] OnRewindStart");
+        }
+        private void OnRewindEnd()
+        {
+            Debug.Log($"[ThirdPersonControllerRewind] OnRewindEnd");
+        }
+        
+        private void OnRewindTick(float t)
+        {
+           Debug.Log($"[ThirdPersonControllerRewind] OnRewindTick {t}");
         }
 
         private void Start()
@@ -169,20 +188,23 @@ namespace StarterAssets
     //    [SerializeField] private AnimationRewindPlayerOLD _rewindAnimation;
         [SerializeField] private float _debugTimeScale = 1f;
 
- 
-     
+
+        [SerializeField] private RewindEventChannelSO _rewindEventsChannel;
+        
+        
+        
         
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.R))
             {
                 Debug.Log($"[GetKeyDown] (KeyCode.R");
-               _rewinder.StartRewind();
+            //   playerRewinder.StartRewind();
             }
             
             else if (Input.GetKeyUp(KeyCode.R))
             {
-                _rewinder.StopRewind();
+           //     playerRewinder.StopRewind();
             }
 
             if (_isReversing)  return;
