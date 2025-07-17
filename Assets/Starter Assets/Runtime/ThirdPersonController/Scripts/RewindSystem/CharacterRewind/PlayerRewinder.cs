@@ -1,7 +1,7 @@
 ﻿using StarterAssets.ScriptableObjects;
 using UnityEngine;
 
-namespace ReverseRelated
+namespace RewindSystem
 {
     public class PlayerRewinder: MonoBehaviour
     {

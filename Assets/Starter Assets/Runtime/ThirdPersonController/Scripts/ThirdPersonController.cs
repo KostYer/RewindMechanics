@@ -111,13 +111,8 @@ namespace StarterAssets
         private const float _threshold = 0.01f;
 
         private bool _hasAnimator;
-  
-       [FormerlySerializedAs("_rewinder")] [SerializeField] private PlayerRewinder playerRewinder;
-
-
-
-
-
+        [SerializeField] private RewindEventChannelSO _rewindEventsChannel;
+        private bool _isReversing;
         private bool IsCurrentDeviceMouse
         {
             get
@@ -141,23 +136,11 @@ namespace StarterAssets
 
             _rewindEventsChannel.OnRewindStart += OnRewindStart;
             _rewindEventsChannel.OnRewindEnd += OnRewindEnd;
-            _rewindEventsChannel.OnRewindTick += OnRewindTick;
+           
         }
 
-        private void OnRewindStart()
-        {
-            Debug.Log($"[ThirdPersonControllerRewind] OnRewindStart");
-        }
-        private void OnRewindEnd()
-        {
-            Debug.Log($"[ThirdPersonControllerRewind] OnRewindEnd");
-        }
-        
-        private void OnRewindTick(float t)
-        {
-           Debug.Log($"[ThirdPersonControllerRewind] OnRewindTick {t}");
-        }
-
+       
+  
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
@@ -179,34 +162,19 @@ namespace StarterAssets
             
           //  animationRewindPlayer = GetComponent<AnimationRewindPlayerOLD>();
         }
-
-
-        private float rewindStartTime;
-        private float currentRewindTime;
-        private float rewindSpeed = 1f;
-        private bool _isReversing;
-    //    [SerializeField] private AnimationRewindPlayerOLD _rewindAnimation;
-        [SerializeField] private float _debugTimeScale = 1f;
-
-
-        [SerializeField] private RewindEventChannelSO _rewindEventsChannel;
-        
-        
-        
+ 
+        private void OnRewindStart()
+        {
+            _isReversing = true;
+        }
+        private void OnRewindEnd()
+        {
+            _isReversing = false;
+        }
+         
         
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                Debug.Log($"[GetKeyDown] (KeyCode.R");
-            //   playerRewinder.StartRewind();
-            }
-            
-            else if (Input.GetKeyUp(KeyCode.R))
-            {
-           //     playerRewinder.StopRewind();
-            }
-
             if (_isReversing)  return;
            
               //  _reversible.IsReversing = false;

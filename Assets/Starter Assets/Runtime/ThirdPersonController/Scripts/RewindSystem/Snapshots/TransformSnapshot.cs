@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace ReverseRelated
+namespace Snapshots
 {
-    public struct Snapshot
+    public struct TransformSnapshot
     {
         public float time;
         public Vector3 position;

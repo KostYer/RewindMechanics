@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
 
-namespace ReverseRelated
+namespace RewindSystem
 {
     public class CharacterAnimationRewinder: MonoBehaviour
     {

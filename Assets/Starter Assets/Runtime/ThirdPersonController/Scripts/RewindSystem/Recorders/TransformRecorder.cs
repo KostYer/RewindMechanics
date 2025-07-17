@@ -1,17 +1,18 @@
 ﻿using System.Collections.Generic;
+using Snapshots;
 using UnityEngine;
 
-namespace ReverseRelated
+namespace RewindSystem
 {
     public class TransformRecorder: MonoBehaviour
     {
         public bool IsReversing;
         private float _maxTime = 5f;
-        List<Snapshot> snapshots = new List<Snapshot>();
+        List<TransformSnapshot> snapshots = new List<TransformSnapshot>();
 
-        private Snapshot _current;
+        private TransformSnapshot _current;
 
-        public List<Snapshot> Snapshots => snapshots;
+        public List<TransformSnapshot> Snapshots => snapshots;
         float totalRecordedTime = 5f; // e.g. keep last 5 seconds
 
         void FixedUpdate() {
@@ -20,7 +21,7 @@ namespace ReverseRelated
             
             float timeNow = Time.time;
 
-            snapshots.Add(new Snapshot {
+            snapshots.Add(new TransformSnapshot {
                 time = timeNow,
                 position = transform.position,
                 rotation = transform.rotation
@@ -36,7 +37,7 @@ namespace ReverseRelated
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            foreach (Snapshot snapshot in snapshots)
+            foreach (TransformSnapshot snapshot in snapshots)
             {
                 Gizmos.DrawSphere(snapshot.position, 0.1f);
             }

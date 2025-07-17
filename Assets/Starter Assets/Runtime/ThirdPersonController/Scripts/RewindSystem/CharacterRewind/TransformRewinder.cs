@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
  
 
-namespace ReverseRelated
+namespace RewindSystem
 {
     public class TransformRewinder: MonoBehaviour
     {
