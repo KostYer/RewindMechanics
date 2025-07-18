@@ -11,18 +11,13 @@ namespace RewindSystem
     {
         [SerializeField] private CharacterAnimationRecorder characterAnimationRecorder;
         [SerializeField] private Animator ghostAnimator;
-        [SerializeField] private float playbackSpeed = 1f;
         [SerializeField] private RewindSettingsSO _rewindSettings;
  
         private bool _isRewinding;
-        
       
         private PlayableGraph _graph;
         private AnimationClipPlayable _playableClip;
         private AnimationPlayableOutput _output;
-
-        [SerializeField] private AnimationClip _debugClip;
-        
         
         void Start()
         {

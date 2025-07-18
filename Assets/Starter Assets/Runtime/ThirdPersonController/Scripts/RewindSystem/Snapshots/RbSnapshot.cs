@@ -17,7 +17,6 @@ namespace Snapshots
                 Rotation = rb.rotation;
                 Velocity = rb.velocity;
                 AngularVelocity = rb.angularVelocity;
-             
             }
     }
 }

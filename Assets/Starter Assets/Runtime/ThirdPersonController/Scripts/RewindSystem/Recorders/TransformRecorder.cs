@@ -8,11 +8,11 @@ namespace RewindSystem
     {
         public bool IsReversing;
         private float _maxTime = 5f;
-        List<TransformSnapshot> snapshots = new List<TransformSnapshot>();
+        private List<TransformSnapshot> _snapshots = new List<TransformSnapshot>();
 
         private TransformSnapshot _current;
 
-        public List<TransformSnapshot> Snapshots => snapshots;
+        public List<TransformSnapshot> Snapshots => _snapshots;
         float totalRecordedTime = 5f; // e.g. keep last 5 seconds
 
         void FixedUpdate() {
@@ -21,15 +21,15 @@ namespace RewindSystem
             
             float timeNow = Time.time;
 
-            snapshots.Add(new TransformSnapshot {
+            _snapshots.Add(new TransformSnapshot {
                 time = timeNow,
                 position = transform.position,
                 rotation = transform.rotation
             });
 
             // Trim old entries
-            while (snapshots.Count > 0 && timeNow - snapshots[0].time > totalRecordedTime)
-                snapshots.RemoveAt(0);
+            while (_snapshots.Count > 0 && timeNow - _snapshots[0].time > totalRecordedTime)
+                _snapshots.RemoveAt(0);
         }
  
 
@@ -37,7 +37,7 @@ namespace RewindSystem
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
-            foreach (TransformSnapshot snapshot in snapshots)
+            foreach (TransformSnapshot snapshot in _snapshots)
             {
                 Gizmos.DrawSphere(snapshot.position, 0.1f);
             }

@@ -8,19 +8,16 @@ namespace Recorders
     public class RigidbodyRecorder: MonoBehaviour
     {
         [SerializeField] private Rigidbody _rb;
-        public bool IsAtive;
-        private float _maxTime = 5f;
-        List<RbSnapshot> snapshots = new List<RbSnapshot>();
-
+      
+        private List<RbSnapshot> snapshots = new List<RbSnapshot>();
         private RbSnapshot _current;
+        float totalRecordedTime = 5f;  
 
-        public List<RbSnapshot> Snapshots => snapshots;
-        float totalRecordedTime = 5f; // e.g. keep last 5 seconds
-
+        private bool _isAtive;
         
         void FixedUpdate() {
             
-            if (!IsAtive) return;
+            if (!_isAtive) return;
             
             float timeNow = Time.time;
 
@@ -41,12 +38,12 @@ namespace Recorders
         {
             snapshots.Clear();
             _rb.isKinematic = false;
-            IsAtive = true;
+            _isAtive = true;
         }
         
         public void StopRecord()
         {
-            IsAtive = false;
+            _isAtive = false;
             _rb.isKinematic = true;
         }
         

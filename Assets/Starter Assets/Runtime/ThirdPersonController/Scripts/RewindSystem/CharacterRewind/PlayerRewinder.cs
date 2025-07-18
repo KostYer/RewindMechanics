@@ -10,12 +10,8 @@ namespace RewindSystem
         [SerializeField] private SkinnedMeshRenderer  _skinnedMeshRendererGhost;
         [SerializeField] private CharacterAnimationRewinder characterAnimationRewinder;
         [SerializeField] private TransformRewinder transformRewinder;
-
-        private float rewindStartTime;
+    
         private bool _isReversing;
-        private float rewindElapsed;
-        
-        private float rewindSpeed = .5f;
         
         private void Awake()
         {
@@ -24,7 +20,6 @@ namespace RewindSystem
             _rewindEventChannel.OnRewindEnd += StopRewind;
             _rewindEventChannel.OnRewindTick += OnRewindTick;
         }
-
 
         public void StartRewind()
         {
@@ -52,7 +47,5 @@ namespace RewindSystem
         {
             transformRewinder.ApplyRewind(time);
         }
-
- 
     }
 }

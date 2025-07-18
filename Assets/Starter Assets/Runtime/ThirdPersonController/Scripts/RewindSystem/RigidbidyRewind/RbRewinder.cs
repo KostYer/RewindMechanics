@@ -1,5 +1,4 @@
-﻿using System;
-using Recorders;
+﻿using Recorders;
 using StarterAssets.ScriptableObjects;
 using UnityEngine;
 
@@ -37,7 +36,5 @@ namespace RewindSystem.RigidbidyRewind
              var snapshot = _recorder.FindClosestSnapshot(time);
             _recorder.ApplyTo(snapshot);
         }
-
-
     }
 }
