@@ -11,7 +11,6 @@ namespace RewindSystem
         [SerializeField] private CharacterAnimationRewinder characterAnimationRewinder;
         [SerializeField] private TransformRewinder transformRewinder;
     
-        private bool _isReversing;
         
         private void Awake()
         {
@@ -23,9 +22,6 @@ namespace RewindSystem
 
         public void StartRewind()
         {
-             
-            _isReversing = true;
- 
             _skinnedMeshRenderer.enabled = false;
             _skinnedMeshRendererGhost.enabled = true;
             characterAnimationRewinder.OnRewindStart();
@@ -34,8 +30,6 @@ namespace RewindSystem
         
         public void StopRewind()
         {
-            _isReversing = false;
- 
             _skinnedMeshRenderer.enabled = true;
             _skinnedMeshRendererGhost.enabled = false;
             

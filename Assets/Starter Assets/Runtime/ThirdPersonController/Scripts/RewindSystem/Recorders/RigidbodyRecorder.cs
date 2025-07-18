@@ -1,79 +1,76 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Snapshots;
+using StarterAssets.Interfaces;
 using UnityEngine;
 
 namespace Recorders
 {
-    public class RigidbodyRecorder: MonoBehaviour
+    public class RigidbodyRecorder: IRecorder<RbSnapshot>
     {
-        [SerializeField] private Rigidbody _rb;
-      
-        private List<RbSnapshot> snapshots = new List<RbSnapshot>();
-        private RbSnapshot _current;
-        float totalRecordedTime = 5f;  
+        private Rigidbody _rb;
+        private List<RbSnapshot> _snapshots = new List<RbSnapshot>();
+        private float totalRecordedTime = 5f;  
+        private CancellationTokenSource _tokenSource;
 
-        private bool _isAtive;
-        
-        void FixedUpdate() {
-            
-            if (!_isAtive) return;
-            
-            float timeNow = Time.time;
-
-            snapshots.Add(new RbSnapshot {
-                Time = timeNow,
-                Position = transform.position,
-                Rotation = transform.rotation,
-                Velocity = _rb.velocity,
-                AngularVelocity = _rb.angularVelocity
-            });
-
-            // Trim old entries
-            while (snapshots.Count > 0 && timeNow - snapshots[0].Time > totalRecordedTime)
-                snapshots.RemoveAt(0);
+        public RigidbodyRecorder(Rigidbody rb)
+        {
+            _rb = rb;
         }
 
-        public void StartRecord()
+        public void StartRecording()
         {
-            snapshots.Clear();
+            Clear();
             _rb.isKinematic = false;
-            _isAtive = true;
+            
+            _tokenSource?.Cancel();  
+            _tokenSource?.Dispose();
+            _tokenSource = new CancellationTokenSource();
+
+            RecordSnapshots(_tokenSource.Token);
         }
         
-        public void StopRecord()
+        public void StopRecording()
         {
-            _isAtive = false;
             _rb.isKinematic = true;
+            
+            _tokenSource?.Cancel();  
+            _tokenSource?.Dispose();
+            _tokenSource = null;
         }
         
-        
-        public void ApplyTo(RbSnapshot snapshot)
+        public void Clear()
         {
-            _rb.position = snapshot.Position;
-            _rb.rotation = snapshot.Rotation;
-            _rb.velocity = snapshot.Velocity;
-            _rb.angularVelocity = snapshot.AngularVelocity;
+            _snapshots.Clear(); 
         }
 
+        public IEnumerable<RbSnapshot> GetSnapshots()
+        {
+            return _snapshots;
+        }
+        
+        
+       
        
         
         public RbSnapshot FindClosestSnapshot(float rewindTime)
         {
-            if (snapshots.Count == 0)
+            if (_snapshots.Count == 0)
                 throw new InvalidOperationException("No snapshots recorded.");
 
-            if (rewindTime <= snapshots[0].Time)
-                return snapshots[0];
+            if (rewindTime <= _snapshots[0].Time)
+                return _snapshots[0];
 
-            if (rewindTime >= snapshots[^1].Time)
-                return snapshots[^1];
+            if (rewindTime >= _snapshots[^1].Time)
+                return _snapshots[^1];
 
             // Search from the end
-            for (int i = snapshots.Count - 1; i > 0; i--)
+            for (int i = _snapshots.Count - 1; i > 0; i--)
             {
-                var a = snapshots[i - 1];
-                var b = snapshots[i];
+                var a = _snapshots[i - 1];
+                var b = _snapshots[i];
 
                 if (rewindTime >= a.Time && rewindTime <= b.Time)
                 {
@@ -90,6 +87,30 @@ namespace Recorders
             }
 
             throw new InvalidOperationException("Time not within snapshot range.");
+        }
+        
+        private async UniTaskVoid RecordSnapshots(CancellationToken token)
+        {
+            float totalRecordedTime = 5f; // Or however long you want to record
+
+            while (!token.IsCancellationRequested)
+            {
+                float timeNow = Time.time;
+
+                _snapshots.Add(new RbSnapshot {
+                    Time = timeNow,
+                    Position = _rb.position,
+                    Rotation = _rb.rotation,
+                    Velocity = _rb.velocity,
+                    AngularVelocity = _rb.angularVelocity
+                });
+
+                // Trim old entries
+                while (_snapshots.Count > 0 && timeNow - _snapshots[0].Time > totalRecordedTime)
+                    _snapshots.RemoveAt(0);
+
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+            }
         }
     }
 }

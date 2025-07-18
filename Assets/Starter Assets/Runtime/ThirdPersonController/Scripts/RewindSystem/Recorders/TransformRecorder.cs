@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using Snapshots;
+using StarterAssets.Interfaces;
 using UnityEngine;
 
 namespace RewindSystem
 {
-    public class TransformRecorder: MonoBehaviour
+    public class TransformRecorder: MonoBehaviour,IRecorder<TransformSnapshot>
     {
         public bool IsReversing;
         private float _maxTime = 5f;
@@ -31,7 +32,29 @@ namespace RewindSystem
             while (_snapshots.Count > 0 && timeNow - _snapshots[0].time > totalRecordedTime)
                 _snapshots.RemoveAt(0);
         }
- 
+
+
+        public void StartRecording()
+        {
+          
+        }
+
+        public void StopRecording()
+        {
+          
+        }
+
+        public void Clear()
+        {
+            _snapshots.Clear();
+        }
+
+        public IEnumerable<TransformSnapshot> GetSnapshots()
+        {
+            return _snapshots;
+        }
+        
+         
 
 
         private void OnDrawGizmos()

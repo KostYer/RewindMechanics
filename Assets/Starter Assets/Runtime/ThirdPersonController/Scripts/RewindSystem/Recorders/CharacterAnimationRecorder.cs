@@ -23,7 +23,7 @@ namespace Recorders
         public Animator animator;
     
 
-        [SerializeField] private List<FrameData> recordedFrames = new();
+        private List<FrameData> recordedFrames = new();
         private HumanBodyBones[] allBones;
         private Dictionary<HumanBodyBones, Transform> boneMap;
     
