@@ -1,5 +1,4 @@
-﻿using ReverseRelated;
-using StarterAssets.ScriptableObjects;
+﻿using StarterAssets.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Serialization;
 #if ENABLE_INPUT_SYSTEM
@@ -138,9 +137,8 @@ namespace StarterAssets
             _rewindEventsChannel.OnRewindEnd += OnRewindEnd;
            
         }
-
-       
-  
+ 
+   
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
@@ -159,8 +157,7 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
-            
-          //  animationRewindPlayer = GetComponent<AnimationRewindPlayerOLD>();
+        
         }
  
         private void OnRewindStart()
@@ -176,9 +173,7 @@ namespace StarterAssets
         private void Update()
         {
             if (_isReversing)  return;
-           
-              //  _reversible.IsReversing = false;
-             //   _controller.enabled = true;
+  
                 _hasAnimator = TryGetComponent(out _animator);
 
                 JumpAndGravity();

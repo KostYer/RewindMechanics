@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace ReverseRelated.AnimRecording
+namespace Recorders
 {
     
     [System.Serializable]
@@ -29,7 +29,7 @@ namespace ReverseRelated.AnimRecording
     
 
         private AnimationClip _clip = default;
-        private AnimationClip Clip => _clip;
+      
 
         private bool _isRewinding;
 
@@ -79,12 +79,7 @@ namespace ReverseRelated.AnimRecording
 
             recordedFrames.Add(frame);
         }
-
-        public List<FrameData> GetRecordedData()
-        {
-            return recordedFrames;
-        }
-
+ 
         public void OnRewindStart()
         {
             _isRewinding = true;
