@@ -43,8 +43,8 @@ namespace RewindSystem.RigidbidyRewind
         private void OnRewindEnd()
         {
             _recorder.StartRecording();
-            _rb.velocity = _currentFrameVelocity;
-            _rb.angularVelocity = _currentFrameAngVelocity;
+        //    _rb.velocity = _currentFrameVelocity;
+       //     _rb.angularVelocity = _currentFrameAngVelocity;
         }
         
         private void OnRewindTick(float time)

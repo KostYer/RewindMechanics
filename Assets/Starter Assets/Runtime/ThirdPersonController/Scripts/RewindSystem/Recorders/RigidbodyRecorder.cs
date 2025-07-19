@@ -94,14 +94,7 @@ namespace Recorders
             while (!token.IsCancellationRequested)
             {
                 float timeNow = Time.time;
-
-                _snapshots.Add(new RbSnapshot {
-                    Time = timeNow,
-                    Position = _rb.position,
-                    Rotation = _rb.rotation,
-                    Velocity = _rb.velocity,
-                    AngularVelocity = _rb.angularVelocity
-                });
+                TryAddSnapshot(timeNow);
 
                 // Trim old entries
                 while (_snapshots.Count > 0 && timeNow - _snapshots[0].Time > totalRecordedTime)
@@ -109,6 +102,28 @@ namespace Recorders
 
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             }
+        }
+
+        private void TryAddSnapshot(float t)
+        {
+            if (IsNeedAddSnapshot())
+            {
+                _snapshots.Add(new RbSnapshot {
+                    Time = t,
+                    Position = _rb.position,
+                    Rotation = _rb.rotation,
+                    Velocity = _rb.velocity,
+                    AngularVelocity = _rb.angularVelocity
+                });
+                
+            }
+        }
+
+        private bool IsNeedAddSnapshot()
+        {
+            if (_snapshots.Count == 0) return true;
+            if (_rb.position == _snapshots[^1].Position && _rb.rotation == _snapshots[^1].Rotation) return false;
+            return true;
         }
     }
 }
