@@ -10,14 +10,16 @@ namespace Recorders
 {
     public class RigidbodyRecorder: IRecorder<RbSnapshot>
     {
+        public float MaxDuration { get; set; }
         private Rigidbody _rb;
         private List<RbSnapshot> _snapshots = new List<RbSnapshot>();
-        private float totalRecordedTime = 5f;  
+      
         private CancellationTokenSource _tokenSource;
 
-        public RigidbodyRecorder(Rigidbody rb)
+        public RigidbodyRecorder(Rigidbody rb, float maxDuration)
         {
             _rb = rb;
+            MaxDuration = maxDuration;
         }
 
         public void StartRecording()

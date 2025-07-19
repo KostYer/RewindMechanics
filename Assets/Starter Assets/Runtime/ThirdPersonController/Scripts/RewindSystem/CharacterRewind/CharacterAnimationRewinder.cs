@@ -12,7 +12,6 @@ namespace RewindSystem
 {
     public class CharacterAnimationRewinder: MonoBehaviour
     {
-         private IRecorder<FrameData> _animationRecorder;
         [SerializeField] private Animator ghostAnimator;
         [SerializeField] private RewindSettingsSO _rewindSettings;
         [SerializeField] private Animator _animator;
@@ -25,7 +24,8 @@ namespace RewindSystem
         private AnimationClipPlayable _playableClip;
         private AnimationPlayableOutput _output;
 
-
+        private IRecorder<FrameData> _animationRecorder;
+        
         private void OnValidate()
         {
             _animator = GetComponentInParent<Animator>();
@@ -34,7 +34,7 @@ namespace RewindSystem
         void Start()
         {
             _bonesProvider = new BonesProvider(_animator);
-            _animationRecorder = new CharacterAnimationRecorder (_bonesProvider);
+            _animationRecorder = new CharacterAnimationRecorder (_bonesProvider, _rewindSettings.MaxTimeRecord);
            
             
             _animationRecorder.StartRecording();

@@ -23,6 +23,7 @@ namespace Recorders
     
     public class CharacterAnimationRecorder: IRecorder<FrameData>
     {
+        
         private BonesProvider _bonesProvider;
         private List<FrameData> _recordedFrames = new();
         private Dictionary<HumanBodyBones, Transform> boneMap => _bonesProvider.BoneMap;
@@ -30,10 +31,12 @@ namespace Recorders
         private bool _isRewinding;
         private CancellationTokenSource _tokenSource;
       
+        public float MaxDuration { get; private set; }
 
-        public CharacterAnimationRecorder(BonesProvider bp)
+        public CharacterAnimationRecorder(BonesProvider bp, float maxDur)
         {
             _bonesProvider = bp;
+            MaxDuration = maxDur;
         }
 
         private void RecordFrame()

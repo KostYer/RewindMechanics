@@ -1,16 +1,17 @@
-﻿using UnityEngine;
+﻿using StarterAssets.ScriptableObjects;
+using UnityEngine;
 
 namespace RewindSystem
 {
     public class TransformRewinder: MonoBehaviour
     {
        [SerializeField] private CharacterController _controller;
-       
+       [SerializeField] private RewindSettingsSO _rewindSettings;
        private TransformRecorder _transformRecorder;  
 
         private void Start()
         {
-            _transformRecorder = new TransformRecorder(_controller.transform);
+            _transformRecorder = new TransformRecorder(_controller.transform, _rewindSettings.MaxTimeRecord);
             _transformRecorder.StartRecording();
         }
 

@@ -10,5 +10,7 @@ namespace StarterAssets.ScriptableObjects
 
         public float RewindSpeed => _rewindSpeed;
         public float MaxTimeRecord => _maxTimeRecord;
+
+        public static float Test = 1;
     }
 }

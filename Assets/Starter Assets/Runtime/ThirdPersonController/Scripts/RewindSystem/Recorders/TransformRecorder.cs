@@ -9,20 +9,17 @@ namespace RewindSystem
 {
     public class TransformRecorder: IRecorder<TransformSnapshot>
     {
-       
-        private float _maxTime = 5f;
         private List<TransformSnapshot> _snapshots = new List<TransformSnapshot>();
- 
         private CancellationTokenSource _tokenSource;
-
-        public List<TransformSnapshot> Snapshots => _snapshots;
-        float totalRecordedTime = 5f; // e.g. keep last 5 seconds
-
         private Transform _targetTransform;
+        
+        public List<TransformSnapshot> Snapshots => _snapshots;
+        public float MaxDuration { get; private set; } 
 
-        public TransformRecorder(Transform target)
+        public TransformRecorder(Transform target, float maxDur)
         {
             _targetTransform = target;
+            MaxDuration = maxDur;
         }
 
 
@@ -53,8 +50,6 @@ namespace RewindSystem
         
         private async UniTaskVoid RecordSnapshots(CancellationToken token)
         {
-            float totalRecordedTime = 5f;  
-
             while (!token.IsCancellationRequested)
             {
                 float timeNow = Time.time;
@@ -64,7 +59,7 @@ namespace RewindSystem
                     position = _targetTransform.position,
                     rotation = _targetTransform.rotation
                 });
-                while (_snapshots.Count > 0 && timeNow - _snapshots[0].time > totalRecordedTime)
+                while (_snapshots.Count > 0 && timeNow - _snapshots[0].time > MaxDuration)
                     _snapshots.RemoveAt(0);
                 
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);

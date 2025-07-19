@@ -161,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 85010486}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &85010486
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -309,6 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 93438307}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &93438307
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -457,6 +459,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 143876502}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &143876502
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -605,6 +608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 154317231}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &154317231
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -753,6 +757,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 214519763}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &214519763
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -901,6 +906,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 340309913}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &340309913
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1049,6 +1055,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 379412222}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &379412222
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1262,6 +1269,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 644463705}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &644463705
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1771,6 +1779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 915887905}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &915887905
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1925,6 +1934,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1007023034}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1007023034
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2251,6 +2261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1068789144}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!1 &1075061308
 GameObject:
   m_ObjectHideFlags: 0
@@ -2446,6 +2457,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1362339121}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1362339121
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2672,6 +2684,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1612722399}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1612722399
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2820,6 +2833,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1722540242}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1722540242
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2968,6 +2982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1731377260}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1731377260
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3360,6 +3375,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1790930685}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1790930685
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3508,6 +3524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1814294095}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1814294095
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3656,6 +3673,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1838032968}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1838032968
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3963,6 +3981,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1876866324}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1876866324
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4111,6 +4130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1893711289}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1893711289
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4259,6 +4279,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 1926220541}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &1926220541
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4407,6 +4428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 2075242310}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &2075242310
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4555,6 +4577,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 2088977064}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &2088977064
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4680,7 +4703,6 @@ GameObject:
   - component: {fileID: 2121826571}
   - component: {fileID: 2121826575}
   - component: {fileID: 2121826573}
-  - component: {fileID: 2121826572}
   m_Layer: 8
   m_Name: RewindSystem
   m_TagString: Untagged
@@ -4721,19 +4743,6 @@ MonoBehaviour:
   _skinnedMeshRendererGhost: {fileID: 973424248}
   characterAnimationRewinder: {fileID: 2121826575}
   transformRewinder: {fileID: 2121826573}
---- !u!114 &2121826572
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2121826569}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1fecb4af0e32499c9d6c5539da4ccc23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsReversing: 0
 --- !u!114 &2121826573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4746,8 +4755,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ba2fbe4cf46492cb22d366574053f0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transformRecorder: {fileID: 2121826572}
   _controller: {fileID: 1762682282}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!114 &2121826575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4798,6 +4807,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
   _rb: {fileID: 2141729352}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!54 &2141729352
 Rigidbody:
   m_ObjectHideFlags: 0

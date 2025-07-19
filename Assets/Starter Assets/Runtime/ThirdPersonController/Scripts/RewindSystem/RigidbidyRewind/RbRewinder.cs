@@ -9,6 +9,7 @@ namespace RewindSystem.RigidbidyRewind
     {
         [SerializeField] private RewindEventChannelSO _channel;
         [SerializeField] private Rigidbody _rb;
+        [SerializeField] private RewindSettingsSO _rewindSettings;
         
         private RigidbodyRecorder _recorder;
         
@@ -23,7 +24,7 @@ namespace RewindSystem.RigidbidyRewind
             _channel.OnRewindEnd += OnRewindEnd;
             _channel.OnRewindTick += OnRewindTick;
             
-            _recorder = new RigidbodyRecorder(_rb);
+            _recorder = new RigidbodyRecorder(_rb, _rewindSettings.MaxTimeRecord);
         }
 
         private void Start()
