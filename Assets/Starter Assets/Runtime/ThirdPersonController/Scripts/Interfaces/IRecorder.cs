@@ -7,6 +7,6 @@ namespace StarterAssets.Interfaces
         void StartRecording();
         void StopRecording();
         void Clear();
-        IEnumerable<TSnapshot> GetSnapshots();
+        List<TSnapshot> GetSnapshots();
     }
 }

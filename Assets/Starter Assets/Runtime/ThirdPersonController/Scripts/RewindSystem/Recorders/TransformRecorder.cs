@@ -49,7 +49,7 @@ namespace RewindSystem
             _snapshots.Clear();
         }
 
-        public IEnumerable<TransformSnapshot> GetSnapshots()
+        public List<TransformSnapshot> GetSnapshots()
         {
             return _snapshots;
         }

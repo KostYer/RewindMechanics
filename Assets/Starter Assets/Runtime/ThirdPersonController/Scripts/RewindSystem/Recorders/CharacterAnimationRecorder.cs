@@ -1,4 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using RewindSystem.RuntimeAnimation;
+using Snapshots;
+using StarterAssets.Interfaces;
 using UnityEngine;
 
 namespace Recorders
@@ -18,52 +23,44 @@ namespace Recorders
         public Dictionary<HumanBodyBones, BoneFrameData> bones = new();
     }
     
-    public class CharacterAnimationRecorder: MonoBehaviour
+    public class CharacterAnimationRecorder: IRecorder<FrameData>
     {
-        public Animator animator;
-    
-
-        private List<FrameData> recordedFrames = new();
-        private HumanBodyBones[] allBones;
-        private Dictionary<HumanBodyBones, Transform> boneMap;
-    
-
-        private AnimationClip _clip = default;
+        private BonesProvider _bonesProvider;
+        private List<FrameData> _recordedFrames = new();
+        private Dictionary<HumanBodyBones, Transform> boneMap => _bonesProvider.BoneMap;
+ 
+        private bool _isRewinding;
+        private CancellationTokenSource _tokenSource;
       
 
-        private bool _isRewinding;
-
-        void Start()
+        public CharacterAnimationRecorder(BonesProvider bp)
         {
-            // Cache all valid Humanoid bones
-            allBones = (HumanBodyBones[])System.Enum.GetValues(typeof(HumanBodyBones));
-            boneMap = new();
-
-            foreach (var bone in allBones)
-            {
-                if (bone == HumanBodyBones.LastBone) continue; // skip sentinel
-                var t = animator.GetBoneTransform(bone);
-                if (t != null)
-                {
-                    boneMap[bone] = t;
-                }
-            }
+            _bonesProvider = bp;
         }
 
-        void LateUpdate()
+      
+        private async UniTaskVoid RecordSnapshots(CancellationToken token)
         {
-            if (_isRewinding) return;
+            float totalRecordedTime = 5f;  
 
-            RecordFrame();
+            while (!token.IsCancellationRequested)
+            {
+                RecordFrame();
+
+                float timeNow = Time.time;
+            //    while (_recordedFrames.Count > 0 && timeNow - _recordedFrames[0].time > totalRecordedTime)
+             //       _recordedFrames.RemoveAt(0);
+
+                await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
+            }
         }
 
 
         private void RecordFrame()
         {
+            Debug.Log($"[RecordFrame]");
             var frame = new FrameData();
             frame.time = Time.time;
-            
-            
             
             foreach (var kvp in boneMap)
             {
@@ -77,103 +74,35 @@ namespace Recorders
                 };
             }
 
-            recordedFrames.Add(frame);
+            _recordedFrames.Add(frame);
         }
  
-        public void OnRewindStart()
+        public void StartRecording()
         {
-            _isRewinding = true;
+            Clear();
+            _tokenSource?.Cancel();  
+            _tokenSource?.Dispose();
+            _tokenSource = new CancellationTokenSource();
+
+            RecordSnapshots(_tokenSource.Token).Forget();
         }
 
-        public void OnRewindStop()
+        public void StopRecording()
         {
-            _isRewinding = false;
-            recordedFrames.Clear();
+            _tokenSource?.Cancel();  
+            _tokenSource?.Dispose();
+            _tokenSource = null;
+           
         }
-        
-        public AnimationClip CreateAnimationClipFromFrames()
+
+        public void Clear()
         {
-            _clip = new AnimationClip();
-            _clip.name = "RewindClip";
-            _clip.legacy = false;
-
-            float frameRate = 45f; // adjust if different
-            float dt = 1f / frameRate;
-
-            foreach (var bone in boneMap)
-            {
-                var humanBone = bone.Key;
-                var transform = bone.Value;
-
-               
-                
-                string bonePath = GetRelativePath(transform,  animator.transform); // we'll define this
-                
-                Debug.Log("Bone path: " + bonePath);
-
-                var posX = new AnimationCurve();
-                var posY = new AnimationCurve();
-                var posZ = new AnimationCurve();
-
-                var rotX = new AnimationCurve();
-                var rotY = new AnimationCurve();
-                var rotZ = new AnimationCurve();
-                var rotW = new AnimationCurve();
-                
-                float baseTime = recordedFrames[0].time;
-
-                for (int i = 0; i < recordedFrames.Count; i++)
-                {
-                    if (!recordedFrames[i].bones.TryGetValue(humanBone, out var boneData))
-                    {
-                        Debug.Log($"[RawFrameRecorder] doesnt contain data for {humanBone}");
-                        continue;
-                    }
-                    float time = recordedFrames[i].time - baseTime;
-
-                    Vector3 pos = boneData.localPosition;
-                    Quaternion rot = boneData.localRotation;
-
-                    posX.AddKey(time, pos.x);
-                    posY.AddKey(time, pos.y);
-                    posZ.AddKey(time, pos.z);
-
-                    rotX.AddKey(time, rot.x);
-                    rotY.AddKey(time, rot.y);
-                    rotZ.AddKey(time, rot.z);
-                    rotW.AddKey(time, rot.w);
-                }
-
-                _clip.SetCurve(bonePath, typeof(Transform), "localPosition.x", posX);
-                _clip.SetCurve(bonePath, typeof(Transform), "localPosition.y", posY);
-                _clip.SetCurve(bonePath, typeof(Transform), "localPosition.z", posZ);
-
-                _clip.SetCurve(bonePath, typeof(Transform), "localRotation.x", rotX);
-                _clip.SetCurve(bonePath, typeof(Transform), "localRotation.y", rotY);
-                _clip.SetCurve(bonePath, typeof(Transform), "localRotation.z", rotZ);
-                _clip.SetCurve(bonePath, typeof(Transform), "localRotation.w", rotW);
-            }
-
-            _clip.EnsureQuaternionContinuity();
-            return _clip;
+            _recordedFrames.Clear();
         }
-        
-        private string GetRelativePath(Transform target, Transform root)
+
+        public List<FrameData> GetSnapshots()
         {
-            if (target == null || root == null)
-                return null;
-
-            if (target == root)
-                return "";
-
-            if (target.parent == null)
-                throw new System.Exception($"[GetRelativePath] Target {target.name} is not a child of root {root.name}");
-
-            string parentPath = GetRelativePath(target.parent, root);
-            if (string.IsNullOrEmpty(parentPath))
-                return target.name;
-
-            return parentPath + "/" + target.name;
+            return _recordedFrames;
         }
     }
 }

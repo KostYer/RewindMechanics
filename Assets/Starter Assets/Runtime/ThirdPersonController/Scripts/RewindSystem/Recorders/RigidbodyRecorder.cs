@@ -46,14 +46,10 @@ namespace Recorders
             _snapshots.Clear(); 
         }
 
-        public IEnumerable<RbSnapshot> GetSnapshots()
+        public List<RbSnapshot> GetSnapshots()
         {
             return _snapshots;
         }
-        
-        
-       
-       
         
         public RbSnapshot FindClosestSnapshot(float rewindTime)
         {

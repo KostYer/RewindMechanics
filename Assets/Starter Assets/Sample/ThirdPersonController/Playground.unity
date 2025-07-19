@@ -4680,7 +4680,6 @@ GameObject:
   - component: {fileID: 2121826571}
   - component: {fileID: 2121826575}
   - component: {fileID: 2121826573}
-  - component: {fileID: 2121826574}
   - component: {fileID: 2121826572}
   m_Layer: 8
   m_Name: RewindSystem
@@ -4749,19 +4748,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transformRecorder: {fileID: 2121826572}
   _controller: {fileID: 1762682282}
---- !u!114 &2121826574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2121826569}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a0e859d0c294fddbdbfeffe8f061415, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 1762682271}
 --- !u!114 &2121826575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4774,9 +4760,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb9d0c34745e4a8d9353d5decf421245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterAnimationRecorder: {fileID: 2121826574}
   ghostAnimator: {fileID: 1845432487}
   _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
+  _animator: {fileID: 1762682271}
 --- !u!1 &2141729349
 GameObject:
   m_ObjectHideFlags: 0
