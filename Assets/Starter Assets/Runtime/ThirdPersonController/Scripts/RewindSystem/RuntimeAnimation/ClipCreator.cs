@@ -6,10 +6,8 @@ namespace RewindSystem.RuntimeAnimation
 {
     public class ClipCreator
     {
-        
         public AnimationClip CreateAnimationClipFromFrames(Animator animator,List<FrameData> recordedFrames, Dictionary<HumanBodyBones, Transform> boneMap)
         {
-            Debug.Log($"[recordedFrames] {recordedFrames.Count}");
            var clip = new AnimationClip();
            clip.name = "RewindClip";
            clip.legacy = false;

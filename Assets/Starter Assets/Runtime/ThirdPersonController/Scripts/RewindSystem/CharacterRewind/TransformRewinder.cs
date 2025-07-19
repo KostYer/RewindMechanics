@@ -1,41 +1,40 @@
 ﻿using UnityEngine;
- 
 
 namespace RewindSystem
 {
     public class TransformRewinder: MonoBehaviour
     {
-       [SerializeField] private TransformRecorder transformRecorder; //rename to transform recorder
        [SerializeField] private CharacterController _controller;
+       
+       private TransformRecorder _transformRecorder;  
 
-        private bool _isRewinding;
-        
+        private void Start()
+        {
+            _transformRecorder = new TransformRecorder(_controller.transform);
+            _transformRecorder.StartRecording();
+        }
+
         public void OnRewindStart()
         {
             _controller.enabled = false;
-            _isRewinding = true;
-            transformRecorder.IsReversing = true;
-          
+            _transformRecorder.StopRecording();
         }
 
         public void OnRewindStop()
         {
             _controller.enabled = true;
-            _isRewinding = false;
-            transformRecorder.IsReversing = false;
-            transformRecorder.Snapshots.Clear();
+            _transformRecorder.StartRecording();
         }
- 
  
         public void ApplyRewind(float currentRewindTime)
         {
-            for (int i = transformRecorder.Snapshots.Count - 1; i > 0; i--)
+            for (int i = _transformRecorder.Snapshots.Count - 1; i > 0; i--)
             {
-                if (transformRecorder.Snapshots[i - 1].time <= currentRewindTime &&
-                    currentRewindTime <= transformRecorder.Snapshots[i].time)
+                if (_transformRecorder.Snapshots[i - 1].time <= currentRewindTime &&
+                    currentRewindTime <= _transformRecorder.Snapshots[i].time)
                 {
-                    var a = transformRecorder.Snapshots[i];
-                    var b = transformRecorder.Snapshots[i - 1];
+                    var a = _transformRecorder.Snapshots[i];
+                    var b = _transformRecorder.Snapshots[i - 1];
 
                     float t = Mathf.InverseLerp(a.time, b.time, currentRewindTime);
                     _controller.transform.position = Vector3.Lerp(a.position, b.position, t);

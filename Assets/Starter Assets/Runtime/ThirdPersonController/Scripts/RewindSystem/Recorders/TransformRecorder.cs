@@ -1,47 +1,44 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using Snapshots;
 using StarterAssets.Interfaces;
 using UnityEngine;
 
 namespace RewindSystem
 {
-    public class TransformRecorder: MonoBehaviour,IRecorder<TransformSnapshot>
+    public class TransformRecorder: IRecorder<TransformSnapshot>
     {
-        public bool IsReversing;
+       
         private float _maxTime = 5f;
         private List<TransformSnapshot> _snapshots = new List<TransformSnapshot>();
-
-        private TransformSnapshot _current;
+ 
+        private CancellationTokenSource _tokenSource;
 
         public List<TransformSnapshot> Snapshots => _snapshots;
         float totalRecordedTime = 5f; // e.g. keep last 5 seconds
 
-        void FixedUpdate() {
-            
-            if (IsReversing) return;
-            
-            float timeNow = Time.time;
+        private Transform _targetTransform;
 
-            _snapshots.Add(new TransformSnapshot {
-                time = timeNow,
-                position = transform.position,
-                rotation = transform.rotation
-            });
-
-            // Trim old entries
-            while (_snapshots.Count > 0 && timeNow - _snapshots[0].time > totalRecordedTime)
-                _snapshots.RemoveAt(0);
+        public TransformRecorder(Transform target)
+        {
+            _targetTransform = target;
         }
 
 
         public void StartRecording()
         {
-          
+            Clear();
+            _tokenSource?.Dispose();
+            _tokenSource = new CancellationTokenSource();
+            RecordSnapshots(_tokenSource.Token);
         }
 
         public void StopRecording()
         {
-          
+            _tokenSource?.Cancel();  
+            _tokenSource?.Dispose();
+            _tokenSource = null;
         }
 
         public void Clear()
@@ -54,15 +51,23 @@ namespace RewindSystem
             return _snapshots;
         }
         
-         
-
-
-        private void OnDrawGizmos()
+        private async UniTaskVoid RecordSnapshots(CancellationToken token)
         {
-            Gizmos.color = Color.green;
-            foreach (TransformSnapshot snapshot in _snapshots)
+            float totalRecordedTime = 5f;  
+
+            while (!token.IsCancellationRequested)
             {
-                Gizmos.DrawSphere(snapshot.position, 0.1f);
+                float timeNow = Time.time;
+
+                _snapshots.Add(new TransformSnapshot {
+                    time = timeNow,
+                    position = _targetTransform.position,
+                    rotation = _targetTransform.rotation
+                });
+                while (_snapshots.Count > 0 && timeNow - _snapshots[0].time > totalRecordedTime)
+                    _snapshots.RemoveAt(0);
+                
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             }
         }
     }

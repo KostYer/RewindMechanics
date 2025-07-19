@@ -2,13 +2,11 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using RewindSystem.RuntimeAnimation;
-using Snapshots;
 using StarterAssets.Interfaces;
 using UnityEngine;
 
 namespace Recorders
 {
-    
     [System.Serializable]
     public class BoneFrameData
     {
@@ -38,27 +36,8 @@ namespace Recorders
             _bonesProvider = bp;
         }
 
-      
-        private async UniTaskVoid RecordSnapshots(CancellationToken token)
-        {
-            float totalRecordedTime = 5f;  
-
-            while (!token.IsCancellationRequested)
-            {
-                RecordFrame();
-
-                float timeNow = Time.time;
-            //    while (_recordedFrames.Count > 0 && timeNow - _recordedFrames[0].time > totalRecordedTime)
-             //       _recordedFrames.RemoveAt(0);
-
-                await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
-            }
-        }
-
-
         private void RecordFrame()
         {
-            Debug.Log($"[RecordFrame]");
             var frame = new FrameData();
             frame.time = Time.time;
             
@@ -103,6 +82,22 @@ namespace Recorders
         public List<FrameData> GetSnapshots()
         {
             return _recordedFrames;
+        }
+      
+        private async UniTaskVoid RecordSnapshots(CancellationToken token)
+        {
+            float totalRecordedTime = 5f;  
+
+            while (!token.IsCancellationRequested)
+            {
+                RecordFrame();
+
+                float timeNow = Time.time;
+                while (_recordedFrames.Count > 0 && timeNow - _recordedFrames[0].time > totalRecordedTime)
+                    _recordedFrames.RemoveAt(0);
+
+                await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
+            }
         }
     }
 }
