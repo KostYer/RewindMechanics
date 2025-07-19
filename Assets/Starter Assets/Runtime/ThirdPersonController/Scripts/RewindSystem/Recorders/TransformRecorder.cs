@@ -22,7 +22,6 @@ namespace RewindSystem
             MaxDuration = maxDur;
         }
 
-
         public void StartRecording()
         {
             Clear();

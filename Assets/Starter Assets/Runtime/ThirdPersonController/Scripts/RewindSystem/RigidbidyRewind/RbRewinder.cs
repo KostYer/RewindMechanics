@@ -12,6 +12,9 @@ namespace RewindSystem.RigidbidyRewind
         [SerializeField] private RewindSettingsSO _rewindSettings;
         
         private RigidbodyRecorder _recorder;
+
+        private Vector3 _currentFrameVelocity;
+        private Vector3 _currentFrameAngVelocity;
         
         private void OnValidate()
         {
@@ -40,6 +43,8 @@ namespace RewindSystem.RigidbidyRewind
         private void OnRewindEnd()
         {
             _recorder.StartRecording();
+            _rb.velocity = _currentFrameVelocity;
+            _rb.angularVelocity = _currentFrameAngVelocity;
         }
         
         private void OnRewindTick(float time)
@@ -52,8 +57,8 @@ namespace RewindSystem.RigidbidyRewind
         {
             _rb.position = snapshot.Position;
             _rb.rotation = snapshot.Rotation;
-            _rb.velocity = snapshot.Velocity;
-            _rb.angularVelocity = snapshot.AngularVelocity;
+            _currentFrameVelocity= snapshot.Velocity;
+            _currentFrameAngVelocity = snapshot.AngularVelocity;
         }
     }
 }
