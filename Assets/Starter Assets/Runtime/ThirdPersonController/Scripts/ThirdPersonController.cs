@@ -172,12 +172,11 @@ namespace StarterAssets
         
         private void Update()
         {
+            GroundedCheck();
+            JumpAndGravity();
             if (_isReversing)  return;
-  
-                _hasAnimator = TryGetComponent(out _animator);
-
-                JumpAndGravity();
-                GroundedCheck();
+              
+               
                 Move();
         }
 
@@ -204,10 +203,7 @@ namespace StarterAssets
                 QueryTriggerInteraction.Ignore);
 
             // update animator if using character
-            if (_hasAnimator)
-            {
-                _animator.SetBool(_animIDGrounded, Grounded);
-            }
+            _animator.SetBool(_animIDGrounded, Grounded);
         }
 
         private void CameraRotation()
@@ -326,10 +322,7 @@ namespace StarterAssets
                     _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
                     // update animator if using character
-                    if (_hasAnimator)
-                    {
-                        _animator.SetBool(_animIDJump, true);
-                    }
+                    _animator.SetBool(_animIDJump, true);
                 }
 
                 // jump timeout

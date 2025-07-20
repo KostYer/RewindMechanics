@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14fba6a8218347b688ce2f967186f22a, type: 3}
   m_Name: RewindSettingsSO
   m_EditorClassIdentifier: 
-  _rewindSpeed: 0.5
+  _rewindSpeed: 0.7
   _maxTimeRecord: 20
