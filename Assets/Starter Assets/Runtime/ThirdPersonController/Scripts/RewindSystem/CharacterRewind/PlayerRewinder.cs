@@ -10,8 +10,8 @@ namespace RewindSystem
         [SerializeField] private SkinnedMeshRenderer  _skinnedMeshRendererGhost;
         [SerializeField] private CharacterAnimationRewinder characterAnimationRewinder;
         [SerializeField] private TransformRewinder transformRewinder;
-    
-        
+
+        private float _targetTime;
         private void Awake()
         {
             _skinnedMeshRendererGhost.enabled = false;
@@ -20,7 +20,7 @@ namespace RewindSystem
             _rewindEventChannel.OnRewindTick += OnRewindTick;
         }
 
-        public void StartRewind()
+        private void StartRewind()
         {
             _skinnedMeshRenderer.enabled = false;
             _skinnedMeshRendererGhost.enabled = true;
@@ -28,18 +28,23 @@ namespace RewindSystem
             transformRewinder.OnRewindStart();
         }
         
-        public void StopRewind()
+        private void StopRewind()
         {
             _skinnedMeshRenderer.enabled = true;
             _skinnedMeshRendererGhost.enabled = false;
             
+            characterAnimationRewinder.ApplyAnimationState(_targetTime); //MUST be before    characterAnimationRewinder.OnRewindStop();
+            
             characterAnimationRewinder.OnRewindStop();
             transformRewinder.OnRewindStop();
+
+           
         }
         
         private void OnRewindTick(float time)
         {
             transformRewinder.ApplyRewind(time);
+            _targetTime = time;
         }
     }
 }

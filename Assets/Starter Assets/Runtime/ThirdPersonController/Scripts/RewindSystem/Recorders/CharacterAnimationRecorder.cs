@@ -19,13 +19,19 @@ namespace Recorders
     {
         public float time;
         public Dictionary<HumanBodyBones, BoneFrameData> bones = new();
+        public int StateHash;
+        public float NormTime;
     }
+
     
+
     public class CharacterAnimationRecorder: IRecorder<FrameData>
     {
         
         private BonesProvider _bonesProvider;
+        private Animator _animator;
         private List<FrameData> _recordedFrames = new();
+       
         private Dictionary<HumanBodyBones, Transform> boneMap => _bonesProvider.BoneMap;
  
         private bool _isRewinding;
@@ -33,31 +39,13 @@ namespace Recorders
       
         public float MaxDuration { get; private set; }
 
-        public CharacterAnimationRecorder(BonesProvider bp, float maxDur)
+        public CharacterAnimationRecorder(BonesProvider bp, float maxDur, Animator animator)
         {
             _bonesProvider = bp;
             MaxDuration = maxDur;
+            _animator = animator;
         }
 
-        private void RecordFrame()
-        {
-            var frame = new FrameData();
-            frame.time = Time.time;
-            
-            foreach (var kvp in boneMap)
-            {
-                var bone = kvp.Key;
-                var t = kvp.Value;
-
-                frame.bones[bone] = new BoneFrameData
-                {
-                    localPosition = t.localPosition,
-                    localRotation = t.localRotation
-                };
-            }
-
-            _recordedFrames.Add(frame);
-        }
  
         public void StartRecording()
         {
@@ -89,18 +77,41 @@ namespace Recorders
       
         private async UniTaskVoid RecordSnapshots(CancellationToken token)
         {
-            float totalRecordedTime = 5f;  
+       
 
             while (!token.IsCancellationRequested)
             {
                 RecordFrame();
 
                 float timeNow = Time.time;
-                while (_recordedFrames.Count > 0 && timeNow - _recordedFrames[0].time > totalRecordedTime)
+                while (_recordedFrames.Count > 0 && timeNow - _recordedFrames[0].time > MaxDuration)
                     _recordedFrames.RemoveAt(0);
 
                 await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
             }
+        }
+        
+        
+        private void RecordFrame()
+        {
+            var frame = new FrameData();
+            frame.time = Time.time;
+            
+            foreach (var kvp in boneMap)
+            {
+                var bone = kvp.Key;
+                var t = kvp.Value;
+
+                frame.bones[bone] = new BoneFrameData
+                {
+                    localPosition = t.localPosition,
+                    localRotation = t.localRotation
+                };
+            }
+
+           
+            
+            _recordedFrames.Add(frame);
         }
     }
 }

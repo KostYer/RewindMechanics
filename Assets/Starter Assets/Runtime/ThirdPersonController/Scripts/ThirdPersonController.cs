@@ -172,11 +172,11 @@ namespace StarterAssets
         
         private void Update()
         {
-            GroundedCheck();
-            JumpAndGravity();
+          
             if (_isReversing)  return;
               
-               
+            GroundedCheck();
+            JumpAndGravity();
                 Move();
         }
 
