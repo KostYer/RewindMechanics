@@ -37,8 +37,6 @@ namespace RewindSystem
             
             characterAnimationRewinder.OnRewindStop();
             transformRewinder.OnRewindStop();
-
-           
         }
         
         private void OnRewindTick(float time)

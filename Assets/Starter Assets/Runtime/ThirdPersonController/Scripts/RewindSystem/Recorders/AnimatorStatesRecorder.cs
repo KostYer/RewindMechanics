@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace Starter_Assets.Runtime.ThirdPersonController.Scripts.RewindSystem.Recorders
 {
- 
     public class AnimatorStateSnapshot
     {
         public float Time;

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 using StarterAssets.ScriptableObjects;
 using StarterAssets.Utilities;
@@ -11,10 +10,7 @@ namespace RewindSystem
     {
         [SerializeField] private RewindEventChannelSO _eventChannel;
         [SerializeField] private RewindSettingsSO _rewindSettings;
-
-      //  private float _rewindElapsed = 0f;
-       // private float _rewindStartTime = 0f;
-        
+ 
         private bool _isRewinding;
         
         private CancellationTokenSource _rewindCTS;
@@ -41,9 +37,7 @@ namespace RewindSystem
 
         private void StartRewind()
         {
-            Debug.Log($"[RewindInvoker] StartRewind attempted");
             if(_isRewinding) return;
-            Debug.Log($"[RewindInvoker] StartRewind invoked");
             
             _rewindCTS?.Cancel();  
             _rewindCTS?.Dispose();
@@ -73,7 +67,6 @@ namespace RewindSystem
     
         private async UniTask RewindRoutineAsync(CancellationToken token)
         {
-         
             var rewindStartTime = Time.time;
             var rewindElapsed = 0f;
             var endTime =(rewindStartTime - rewindEndTime)/_rewindSettings.RewindSpeed;
@@ -93,16 +86,11 @@ namespace RewindSystem
                     {
                         await UniTask.NextFrame();  
                         StopRewind();
-                       
                     } 
 
                     _eventChannel.RaiseRewindTick(targetTime);
                     await UniTask.Yield(PlayerLoopTiming.Update);
-                 
                 }
         }
-
-       
-       
     }
 }

@@ -23,11 +23,8 @@ namespace Recorders
         public float NormTime;
     }
 
-    
-
     public class CharacterAnimationRecorder: IRecorder<FrameData>
     {
-        
         private BonesProvider _bonesProvider;
         private Animator _animator;
         private List<FrameData> _recordedFrames = new();
@@ -45,7 +42,6 @@ namespace Recorders
             MaxDuration = maxDur;
             _animator = animator;
         }
-
  
         public void StartRecording()
         {
@@ -62,7 +58,6 @@ namespace Recorders
             _tokenSource?.Cancel();  
             _tokenSource?.Dispose();
             _tokenSource = null;
-           
         }
 
         public void Clear()
@@ -77,8 +72,6 @@ namespace Recorders
       
         private async UniTaskVoid RecordSnapshots(CancellationToken token)
         {
-       
-
             while (!token.IsCancellationRequested)
             {
                 RecordFrame();
@@ -90,7 +83,6 @@ namespace Recorders
                 await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
             }
         }
-        
         
         private void RecordFrame()
         {
@@ -108,9 +100,6 @@ namespace Recorders
                     localRotation = t.localRotation
                 };
             }
-
-           
-            
             _recordedFrames.Add(frame);
         }
     }

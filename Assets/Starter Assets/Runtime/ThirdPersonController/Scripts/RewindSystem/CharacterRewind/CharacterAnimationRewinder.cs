@@ -67,7 +67,6 @@ namespace RewindSystem
             _animationRecorder = new CharacterAnimationRecorder (_bonesProvider, _rewindSettings.MaxTimeRecord, _animator);
             _animStatesRecorder = new AnimatorStatesRecorder(_animator, _rewindSettings.MaxTimeRecord);
            
-            //_animator.CrossFade("ss", 0.1f);
             _animationRecorder.StartRecording();
             _animStatesRecorder.StartRecording();
             
@@ -117,7 +116,6 @@ namespace RewindSystem
             }
  
             var stateHash = frame.StateHash;
-            Debug.Log($"[ApplyAnimationState] state: {_stateHashToName[stateHash]}, frameTime{ frame.Time} targetTime: {targetTime}");
             
             _animator.Play(stateHash, 0, frame.NormTime);
             _animator.Update(0f);
