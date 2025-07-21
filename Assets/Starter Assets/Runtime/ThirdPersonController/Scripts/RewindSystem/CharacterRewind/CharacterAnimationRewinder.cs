@@ -72,6 +72,7 @@ namespace RewindSystem
             
             _graph = PlayableGraph.Create("RewindGraph");
             _output = AnimationPlayableOutput.Create(_graph, "Animation", ghostAnimator);
+            ConstructDebugDictionary();
         }
    
         public void OnRewindStart()
@@ -104,6 +105,7 @@ namespace RewindSystem
             _graph.Play();
         }
   
+        // when rewind stops - apply correct pose (mechanim state and variables)
         public void ApplyAnimationState(float targetTime)
         {
             var recorder = (AnimatorStatesRecorder)_animStatesRecorder;
@@ -113,6 +115,8 @@ namespace RewindSystem
             {
                 if (recorder.AnimatorValueSetters.TryGetValue(kvp.Key, out var setter))
                     setter.Invoke(kvp.Value);
+                var varName = _debugVariablesDict[kvp.Key];
+                Debug.Log($"[CharacterAnimationRewinder] Setting animator value. varName: {varName}, Value: {kvp.Value} ({kvp.Value?.GetType().Name})");
             }
  
             var stateHash = frame.StateHash;
@@ -121,5 +125,28 @@ namespace RewindSystem
             _animator.Update(0f);
             _animator.enabled = true;
         }
+
+        private Dictionary<int, string> _debugVariablesDict = new();
+        private void ConstructDebugDictionary()
+        { 
+             int _animIDSpeed = Animator.StringToHash("Speed");
+             int _animIDGrounded = Animator.StringToHash("Grounded");
+             int _animIDJump = Animator.StringToHash("Jump");
+             int _animIDFreeFall = Animator.StringToHash("FreeFall");
+             int _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+             
+             _debugVariablesDict.Add(_animIDSpeed, "Speed");
+             _debugVariablesDict.Add(_animIDGrounded, "Grounded");
+             _debugVariablesDict.Add(_animIDJump, "Jump");
+             _debugVariablesDict.Add(_animIDFreeFall, "FreeFall");
+             _debugVariablesDict.Add(_animIDMotionSpeed, "MotionSpeed");
+             
+             
+             
+         }
+        
+
+
+        
     }
 }

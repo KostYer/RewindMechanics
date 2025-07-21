@@ -50,9 +50,7 @@ namespace RewindSystem
 
         private void StopRewind()
         {
-            Debug.Log($"[RewindInvoker] StopRewind attempted");
             if(!_isRewinding) return;
-            Debug.Log($"[RewindInvoker] StopRewind invoked");
            
             _rewindCTS?.Cancel();
             _rewindCTS?.Dispose();
