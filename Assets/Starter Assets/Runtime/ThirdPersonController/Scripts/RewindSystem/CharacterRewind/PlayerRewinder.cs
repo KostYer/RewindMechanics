@@ -10,6 +10,7 @@ namespace RewindSystem
         [SerializeField] private SkinnedMeshRenderer  _skinnedMeshRendererGhost;
         [SerializeField] private CharacterAnimationRewinder characterAnimationRewinder;
         [SerializeField] private TransformRewinder transformRewinder;
+        [SerializeField] private TraceDrawer _traceDrawer;
 
         private float _targetTime;
         private void Awake()
@@ -26,6 +27,7 @@ namespace RewindSystem
             _skinnedMeshRendererGhost.enabled = true;
             characterAnimationRewinder.OnRewindStart();
             transformRewinder.OnRewindStart();
+            _traceDrawer.StartDraw();
         }
         
         private void StopRewind()
@@ -37,6 +39,7 @@ namespace RewindSystem
             
             characterAnimationRewinder.OnRewindStop();
             transformRewinder.OnRewindStop();
+            _traceDrawer.StopDraw();
         }
         
         private void OnRewindTick(float time)
