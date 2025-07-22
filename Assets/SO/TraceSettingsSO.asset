@@ -16,4 +16,4 @@ MonoBehaviour:
   _traceUnitSpawnRate: 0.2
   _startingAlpha: 0.7
   _traceColor: {r: 1, g: 1, b: 1, a: 1}
-  _drawTrace: 0
+  _drawTrace: 1
