@@ -33,7 +33,7 @@ namespace RewindSystem
 
         private Dictionary<int, string> _stateHashToName = new();
 
-        private PoseMatcher _poseMatcher = new PoseMatcher();
+    //    private PoseMatcher _poseMatcher = new PoseMatcher();
 
         private void Awake()
         {
@@ -76,12 +76,7 @@ namespace RewindSystem
             _animStatesRecorder.StartRecording();
             _isRewinding = false;
         }
-
-        public void MatchPoseFromGhostToMain()
-        {
-            _poseMatcher.MatchPose(ghostAnimator, _animator);
-        }
-
+ 
         private void PlayAnimationClip()
         {
             var clip = _clipCreator.CreateAnimationClipFromFrames(_animator, _animationRecorder.GetSnapshots(), _bonesProvider.BoneMap);
