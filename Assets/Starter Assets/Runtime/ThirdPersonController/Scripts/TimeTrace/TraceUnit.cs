@@ -37,6 +37,7 @@ namespace RewindSystem
 
         private void SetAlpha(float alpha)
         {
+            if (_materials == null) return;
             foreach (var mat in _materials)
             {
                 mat.SetFloat("_Alpha", alpha);

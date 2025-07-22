@@ -9,13 +9,12 @@ namespace RewindSystem
         [SerializeField] private SkinnedMeshRenderer _ghostMeshRenderer;
         [SerializeField] private Material _ghostBaseMaterial;
         [SerializeField] private TraceSettingsSO _traceSettings;
-     //   [SerializeField] private float _delay = .3f;
-     //   [SerializeField] private float traceUnitLifetime = 14.5f;
+        
         private CancellationTokenSource _tokenSource;
-       
         
         public void StartDraw()
         {
+            if(!_traceSettings.DrawTrace) return;
             _tokenSource?.Cancel();  
             _tokenSource?.Dispose();
             _tokenSource = new CancellationTokenSource();
@@ -25,6 +24,7 @@ namespace RewindSystem
         
         public void StopDraw()
         {
+            if(!_traceSettings.DrawTrace) return;
             _tokenSource?.Cancel();  
             _tokenSource?.Dispose();
             _tokenSource = null;
@@ -60,7 +60,7 @@ namespace RewindSystem
             {
                 newMaterials[i] = new Material(_ghostBaseMaterial); 
                 newMaterials[i].SetFloat("_Alpha", _traceSettings.StartingAlpha);  
-             ///   newMaterials[i].SetColor("_GhostColor", _traceSettings.TraceColor);  
+                newMaterials[i].SetColor("_GhostColor", _traceSettings.TraceColor);  
             }
             meshRenderer.materials = newMaterials;
 
