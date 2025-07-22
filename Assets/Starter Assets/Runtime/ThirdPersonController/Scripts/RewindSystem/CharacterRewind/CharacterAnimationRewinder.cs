@@ -32,23 +32,8 @@ namespace RewindSystem
         private float _targetTime;
 
         private Dictionary<int, string> _stateHashToName = new();
-        
-        private void BuildStateHashDictionary()
-        {
-#if UNITY_EDITOR
-            var controller = _animator.runtimeAnimatorController as AnimatorController;
-            if (controller == null) return;
 
-            foreach (var layer in controller.layers)
-            {
-                foreach (var state in layer.stateMachine.states)
-                {
-                    int hash = Animator.StringToHash(state.state.name);
-                    _stateHashToName[hash] = state.state.name;
-                }
-            }
-#endif
-        }
+        private PoseMatcher _poseMatcher = new PoseMatcher();
 
         private void Awake()
         {
@@ -79,7 +64,7 @@ namespace RewindSystem
         {
             _animationRecorder.StopRecording();
             _animStatesRecorder.StopRecording();
-           // _animator.enabled = false;
+             _animator.enabled = false;
      
             _isRewinding = true;
             PlayAnimationClip();
@@ -90,9 +75,13 @@ namespace RewindSystem
             _animationRecorder.StartRecording();
             _animStatesRecorder.StartRecording();
             _isRewinding = false;
-          
         }
-     
+
+        public void MatchPoseFromGhostToMain()
+        {
+            _poseMatcher.MatchPose(ghostAnimator, _animator);
+        }
+
         private void PlayAnimationClip()
         {
             var clip = _clipCreator.CreateAnimationClipFromFrames(_animator, _animationRecorder.GetSnapshots(), _bonesProvider.BoneMap);
@@ -104,8 +93,7 @@ namespace RewindSystem
             _output.SetSourcePlayable(_playableClip);
             _graph.Play();
         }
-  
-        // when rewind stops - apply correct pose (mechanim state and variables)
+   
         public void ApplyAnimationState(float targetTime)
         {
             var recorder = (AnimatorStatesRecorder)_animStatesRecorder;
@@ -120,15 +108,18 @@ namespace RewindSystem
             }
  
             var stateHash = frame.StateHash;
-            
+           
             _animator.Play(stateHash, 0, frame.NormTime);
+            //_animator.CrossFade(stateHash, .05f);
             _animator.Update(0f);
             _animator.enabled = true;
         }
-
+        
+        /// Debug
         private Dictionary<int, string> _debugVariablesDict = new();
         private void ConstructDebugDictionary()
-        { 
+        {
+#if UNITY_EDITOR
              int _animIDSpeed = Animator.StringToHash("Speed");
              int _animIDGrounded = Animator.StringToHash("Grounded");
              int _animIDJump = Animator.StringToHash("Jump");
@@ -140,13 +131,26 @@ namespace RewindSystem
              _debugVariablesDict.Add(_animIDJump, "Jump");
              _debugVariablesDict.Add(_animIDFreeFall, "FreeFall");
              _debugVariablesDict.Add(_animIDMotionSpeed, "MotionSpeed");
-             
-             
-             
+#endif
          }
         
+                
+        private void BuildStateHashDictionary()
+        {
+#if UNITY_EDITOR
+            var controller = _animator.runtimeAnimatorController as AnimatorController;
+            if (controller == null) return;
 
+            foreach (var layer in controller.layers)
+            {
+                foreach (var state in layer.stateMachine.states)
+                {
+                    int hash = Animator.StringToHash(state.state.name);
+                    _stateHashToName[hash] = state.state.name;
+                }
+            }
+#endif
+        }
 
-        
     }
 }

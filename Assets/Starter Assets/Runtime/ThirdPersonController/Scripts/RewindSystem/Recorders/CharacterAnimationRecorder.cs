@@ -19,8 +19,6 @@ namespace Recorders
     {
         public float time;
         public Dictionary<HumanBodyBones, BoneFrameData> bones = new();
-        public int StateHash;
-        public float NormTime;
     }
 
     public class CharacterAnimationRecorder: IRecorder<FrameData>
