@@ -26,6 +26,7 @@ namespace RewindSystem
             while (time < duration)
             {
                 float alpha = startingAlpha - (time / duration);
+                alpha = Mathf.Clamp01(alpha);
                 SetAlpha(alpha);
                 time += Time.deltaTime;
                 await UniTask.Yield(); // yield to next frame

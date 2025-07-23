@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TraceSettingsSO
   m_EditorClassIdentifier: 
   _traceUnitLifetime: 1
-  _traceUnitSpawnRate: 0.2
-  _startingAlpha: 0.7
+  _traceUnitSpawnRate: 0.15
+  _startingAlpha: 1
   _traceColor: {r: 1, g: 1, b: 1, a: 1}
   _drawTrace: 1
