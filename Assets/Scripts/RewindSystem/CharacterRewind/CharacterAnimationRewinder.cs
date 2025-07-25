@@ -33,8 +33,6 @@ namespace RewindSystem
 
         private Dictionary<int, string> _stateHashToName = new();
 
-    //    private PoseMatcher _poseMatcher = new PoseMatcher();
-
         private void Awake()
         {
             BuildStateHashDictionary();
@@ -99,7 +97,7 @@ namespace RewindSystem
                 if (recorder.AnimatorValueSetters.TryGetValue(kvp.Key, out var setter))
                     setter.Invoke(kvp.Value);
                 var varName = _debugVariablesDict[kvp.Key];
-                Debug.Log($"[CharacterAnimationRewinder] Setting animator value. varName: {varName}, Value: {kvp.Value} ({kvp.Value?.GetType().Name})");
+///                Debug.Log($"[CharacterAnimationRewinder] Setting animator value. varName: {varName}, Value: {kvp.Value} ({kvp.Value?.GetType().Name})");
             }
  
             var stateHash = frame.StateHash;
