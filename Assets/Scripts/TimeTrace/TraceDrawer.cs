@@ -9,11 +9,14 @@ namespace RewindSystem
         [SerializeField] private SkinnedMeshRenderer _ghostMeshRenderer;
         [SerializeField] private Material _ghostBaseMaterial;
         [SerializeField] private TraceSettingsSO _traceSettings;
+        [SerializeField] private bool IsEnabled;
         
         private CancellationTokenSource _tokenSource;
         
         public void StartDraw()
         {
+            if (!IsEnabled) return;
+            
             if(!_traceSettings.DrawTrace) return;
             _tokenSource?.Cancel();  
             _tokenSource?.Dispose();
@@ -24,6 +27,8 @@ namespace RewindSystem
         
         public void StopDraw()
         {
+            if (!IsEnabled) return;
+            
             if(!_traceSettings.DrawTrace) return;
             _tokenSource?.Cancel();  
             _tokenSource?.Dispose();
