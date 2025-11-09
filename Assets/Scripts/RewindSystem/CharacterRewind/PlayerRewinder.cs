@@ -1,4 +1,5 @@
-﻿using StarterAssets.ScriptableObjects;
+﻿using RewindSystem.Traces;
+using StarterAssets.ScriptableObjects;
 using UnityEngine;
 
 namespace RewindSystem
@@ -11,6 +12,9 @@ namespace RewindSystem
         [SerializeField] private CharacterAnimationRewinder characterAnimationRewinder;
         [SerializeField] private TransformRewinder transformRewinder;
         [SerializeField] private TraceDrawer _traceDrawer;
+
+
+        [SerializeField] private CharacterTraceVisualizer _trace;
 
         private float _targetTime;
         private void Awake()
@@ -28,6 +32,8 @@ namespace RewindSystem
             characterAnimationRewinder.OnRewindStart();
             transformRewinder.OnRewindStart();
             _traceDrawer.StartDraw();
+
+            _trace.OnStartRewind();
         }
         
         private void StopRewind()
@@ -40,6 +46,8 @@ namespace RewindSystem
             characterAnimationRewinder.OnRewindStop();
             transformRewinder.OnRewindStop();
             _traceDrawer.StopDraw();
+            
+            _trace.OnStopRewind();
         }
         
         private void OnRewindTick(float time)

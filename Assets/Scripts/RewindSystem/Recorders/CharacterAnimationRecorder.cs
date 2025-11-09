@@ -12,12 +12,16 @@ namespace Recorders
     {
         public Vector3 localPosition;
         public Quaternion localRotation;
+        
+      
     }
 
     [System.Serializable]
     public class FrameData
     {
         public float time;
+        public Vector3 worldPosition;
+        public Quaternion worldRotation;
         public Dictionary<HumanBodyBones, BoneFrameData> bones = new();
     }
 
@@ -33,6 +37,8 @@ namespace Recorders
         private CancellationTokenSource _tokenSource;
       
         public float MaxDuration { get; private set; }
+
+        public List<FrameData> RecordedFrames => _recordedFrames;
 
         public CharacterAnimationRecorder(BonesProvider bp, float maxDur, Animator animator)
         {
@@ -86,7 +92,9 @@ namespace Recorders
         {
             var frame = new FrameData();
             frame.time = Time.time;
-            
+            frame.worldPosition = _animator.transform.position;
+            frame.worldRotation = _animator.transform.rotation;
+             
             foreach (var kvp in boneMap)
             {
                 var bone = kvp.Key;

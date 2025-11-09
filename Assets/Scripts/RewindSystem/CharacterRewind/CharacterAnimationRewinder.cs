@@ -8,7 +8,6 @@ using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
-using FrameData = Recorders.FrameData;
 
 namespace RewindSystem
 {
@@ -26,12 +25,15 @@ namespace RewindSystem
         private AnimationClipPlayable _playableClip;
         private AnimationPlayableOutput _output;
 
-        private IRecorder<FrameData> _animationRecorder;
+        private CharacterAnimationRecorder _animationRecorder;
         private IRecorder<AnimatorStateSnapshot> _animStatesRecorder;
 
-        private float _targetTime;
+      ///  private float _targetTime;
 
         private Dictionary<int, string> _stateHashToName = new();
+
+        public CharacterAnimationRecorder CharacterAnimationRecorder => _animationRecorder;
+        
 
         private void Awake()
         {

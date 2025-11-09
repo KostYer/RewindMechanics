@@ -8,6 +8,7 @@ namespace RewindSystem
 {
     public class RewindInvoker: MonoSingleton<RewindInvoker>
     {
+        public float RewindElapsed => _rewindElapsed;
         [SerializeField] private RewindEventChannelSO _eventChannel;
         [SerializeField] private RewindSettingsSO _rewindSettings;
  
@@ -16,6 +17,7 @@ namespace RewindSystem
         private CancellationTokenSource _rewindCTS;
 
         private float rewindEndTime;
+        private float _rewindElapsed;
 
         private void Start()
         {
@@ -66,7 +68,7 @@ namespace RewindSystem
         private async UniTask RewindRoutineAsync(CancellationToken token)
         {
             var rewindStartTime = Time.time;
-            var rewindElapsed = 0f;
+            _rewindElapsed = 0f;
             var endTime =(rewindStartTime - rewindEndTime)/_rewindSettings.RewindSpeed;
 
                 while (!token.IsCancellationRequested)
@@ -74,8 +76,8 @@ namespace RewindSystem
                     token.ThrowIfCancellationRequested();
                   
                     float step = Time.deltaTime * _rewindSettings.RewindSpeed;
-                    rewindElapsed += step;
-                    float targetTime = rewindStartTime - rewindElapsed; // for broadcasting
+                    _rewindElapsed += step;
+                    float targetTime = rewindStartTime - _rewindElapsed; // for broadcasting
 
 
                     endTime -= step; //for exiting
