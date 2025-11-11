@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Recorders;
 using StarterAssets.ScriptableObjects;
 using UnityEngine;
+
 
 namespace RewindSystem.Traces
 {
@@ -11,31 +12,17 @@ namespace RewindSystem.Traces
     {
         [SerializeField] private CharacterAnimationRewinder _animationRewinder;
         [SerializeField] private GameObject _ghostPrefab;
-   
         
         [SerializeField] private RewindEventChannelSO _eventChannel;
-        
-        
         
         [SerializeField] private Material _ghostBaseMaterial;
         [SerializeField] private TraceSettingsSO _traceSettings;
         
-        
-        
         private int _visualizeEveryNthFrame = 7;
 
         private float _traceTimeLen = .5f;
-
         
         private readonly List<GhostInstance> _ghosts = new();
-
-        private class GhostInstance
-        {
-            public FrameData Frame;
-            public GameObject GameObject;
-            public Renderer Renderer;
-        }
-        
 
         private void Update()
         {
@@ -56,11 +43,8 @@ namespace RewindSystem.Traces
                 Debug.Log($"[CharacterTraceVisualizer] FrameData is empty");
                 return;
             }
-
-            Debug.Log($"[CharacterTraceVisualizer] FrameData.Count {FrameData.Count}");
-
-            ClearGhosts();
             
+             DestroyGhosts();
             
             for (int i = 0; i < FrameData.Count; i += _visualizeEveryNthFrame)
             {
@@ -69,20 +53,13 @@ namespace RewindSystem.Traces
                 var animator = ghost.GetComponent<Animator>();
                 ApplyFrameDataToGhost(frame, animator);
                 
-                RegisterGhost(frame, ghost);
-                
-                // NEW: bake this posed ghost into a static snapshot
-                var snapshot = BakeGhostSnapshot(ghost);
+                 var snapshot = BakeGhostSnapshot(ghost);
 
-                // if you don't need the rig anymore, kill it
-            //    Destroy(ghost);
+                Destroy(ghost);
 
-                // and register the baked snapshot for time-based hiding
                 RegisterGhost(frame, snapshot);
             }
-
         }
-        
         
         void ApplyFrameDataToGhost(FrameData frame, Animator animator)
         {
@@ -101,11 +78,6 @@ namespace RewindSystem.Traces
             }
         }
         
-       
-        
-        
-      
-
         private void RegisterGhost(FrameData frame, GameObject ghost)
         {
             var renderer = ghost.GetComponentInChildren<Renderer>();
@@ -120,17 +92,21 @@ namespace RewindSystem.Traces
 
         private void ClearGhosts()
         {
+            StartCoroutine(FadeOutAllSnapshotsCoroutine(.5f,DestroyGhosts ));
+        }
+        
+        private void DestroyGhosts()
+        {
             for (int i = 0; i < _ghosts.Count; i++)
-            {
-                if (_ghosts[i].GameObject != null)
-                    Destroy(_ghosts[i].GameObject);
-            }
+           {
+               if (_ghosts[i].GameObject != null)
+                   Destroy(_ghosts[i].GameObject);
+           }
 
-            _ghosts.Clear();
+           _ghosts.Clear();
         }
 
-       
-     
+
         private void OnRewindTick(float targetTime)
         {
             for (int i = 0; i < _ghosts.Count; i++)
@@ -147,7 +123,6 @@ namespace RewindSystem.Traces
                     ghost.Renderer.enabled = shouldBeVisible;
             }
         }
-
       
 
         public void OnStartRewind()
@@ -161,8 +136,9 @@ namespace RewindSystem.Traces
             _eventChannel.OnRewindTick -= OnRewindTick;
             ClearGhosts();
         }
-        
-        
+
+
+        private List<MeshRenderer> _snapshotRenderers = new();
         
         private GameObject BakeGhostSnapshot(GameObject ghost)
         {
@@ -197,22 +173,77 @@ namespace RewindSystem.Traces
             }
 
             meshRenderer.materials = newMaterials;
+            
+            meshRenderer.materials = newMaterials;
 
-            // reuse your existing fade logic
-            var traceUnit = new TraceUnit(snapshot);
-            /*traceUnit
-                .FadeOutAsync(_traceSettings.TraceUnitLifetime, _traceSettings.StartingAlpha)
-                .Forget();*/
+            _snapshotRenderers.Add(meshRenderer);
+
 
             return snapshot;
         }
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+        private IEnumerator FadeOutAllSnapshotsCoroutine(float fadeDuration, Action onComplete)
+        {
+            if (_snapshotRenderers.Count == 0)
+                yield break;
+
+            float elapsed = 0f;
+            float startAlpha = _traceSettings.StartingAlpha;
+
+            while (elapsed < fadeDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / fadeDuration);
+                float currentAlpha = Mathf.Lerp(startAlpha, 0f, t);
+
+                // update all materials
+                for (int rendererIndex = 0; rendererIndex < _snapshotRenderers.Count; rendererIndex++)
+                {
+                    var renderer = _snapshotRenderers[rendererIndex];
+                    if (renderer == null)
+                        continue;
+
+                    var materials = renderer.materials;
+                    for (int materialIndex = 0; materialIndex < materials.Length; materialIndex++)
+                    {
+                        var material = materials[materialIndex];
+                        if (material == null)
+                            continue;
+
+                        material.SetFloat("_Alpha", currentAlpha);
+                    }
+                }
+
+                yield return null;
+            }
+          
+            for (int rendererIndex = 0; rendererIndex < _snapshotRenderers.Count; rendererIndex++)
+            {
+                var renderer = _snapshotRenderers[rendererIndex];
+                if (renderer == null)
+                    continue;
+
+                var materials = renderer.materials;
+                for (int materialIndex = 0; materialIndex < materials.Length; materialIndex++)
+                {
+                    var material = materials[materialIndex];
+                    if (material == null)
+                        continue;
+
+                    material.SetFloat("_Alpha", 0f);
+                }
+
+            }
+            onComplete?.Invoke();
+        }
+
+        private class GhostInstance
+        {
+            public FrameData Frame;
+            public GameObject GameObject;
+            public Renderer Renderer;
+        }
+
     }
 }
