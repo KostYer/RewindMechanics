@@ -10,6 +10,30 @@ namespace Recorders
 {
     public class RigidbodyRecorder: IRecorder<RbSnapshot>
     {
+        public bool HasSnapshots => _snapshots.Count > 0;
+        
+        private float _localTime;
+
+        public float FirstSnapshotTime
+        {
+            get
+            {
+                if (_snapshots.Count == 0)
+                    throw new InvalidOperationException("No snapshots recorded.");
+                return _snapshots[0].Time;
+            }
+        }
+
+        public float LastSnapshotTime
+        {
+            get
+            {
+                if (_snapshots.Count == 0)
+                    throw new InvalidOperationException("No snapshots recorded.");
+                return _snapshots[^1].Time;
+            }
+        }
+        
         public float MaxDuration { get; set; }
         private Rigidbody _rb;
         private List<RbSnapshot> _snapshots = new List<RbSnapshot>();
@@ -36,6 +60,7 @@ namespace Recorders
         
         public void StopRecording()
         {
+            AddSnapshot(Time.time);
             _rb.isKinematic = true;
             
             _tokenSource?.Cancel();  
@@ -89,7 +114,7 @@ namespace Recorders
         
         private async UniTaskVoid RecordSnapshots(CancellationToken token)
         {
-            float totalRecordedTime = 5f; // Or however long you want to record
+            float totalRecordedTime = MaxDuration; 
 
             while (!token.IsCancellationRequested)
             {
@@ -108,22 +133,32 @@ namespace Recorders
         {
             if (IsNeedAddSnapshot())
             {
-                _snapshots.Add(new RbSnapshot {
-                    Time = t,
-                    Position = _rb.position,
-                    Rotation = _rb.rotation,
-                    Velocity = _rb.velocity,
-                    AngularVelocity = _rb.angularVelocity
-                });
-                
+                AddSnapshot(t);
             }
         }
 
-        private bool IsNeedAddSnapshot()
+        private bool IsNeedAddSnapshot(bool force = false)
         {
+            return true;
+            if (force) return true;
+           
+
             if (_snapshots.Count == 0) return true;
             if (_rb.position == _snapshots[^1].Position && _rb.rotation == _snapshots[^1].Rotation) return false;
             return true;
         }
+
+        private void AddSnapshot(float t)
+        {
+            _snapshots.Add(new RbSnapshot {
+                Time = t,
+                Position = _rb.position,
+                Rotation = _rb.rotation,
+                Velocity = _rb.velocity,
+                AngularVelocity = _rb.angularVelocity
+            });
+        }
+        
+        
     }
 }

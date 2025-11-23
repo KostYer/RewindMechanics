@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
+using RewindSystem.RigidbidyRewind;
 using StarterAssets.ScriptableObjects;
 using StarterAssets.Utilities;
 using UnityEngine;
@@ -12,6 +13,13 @@ namespace RewindSystem
         [SerializeField] private RewindEventChannelSO _eventChannel;
         [SerializeField] private RewindSettingsSO _rewindSettings;
  
+        
+        
+        [SerializeField] private RbRewinder _rbRewinderDebug;
+        private float startTime;
+        private float endTime;
+        
+        
         private bool _isRewinding;
         
         private CancellationTokenSource _rewindCTS;
@@ -39,15 +47,32 @@ namespace RewindSystem
 
         private void StartRewind()
         {
-            if(_isRewinding) return;
-            
-            _rewindCTS?.Cancel();  
+            if (_isRewinding) return;
+
+            _rewindCTS?.Cancel();
             _rewindCTS?.Dispose();
             _rewindCTS = new CancellationTokenSource();
-            
-            RewindRoutineAsync(_rewindCTS.Token).Forget();
+
             _isRewinding = true;
+
+            // Tell all RbRewinders to stop recording (they’ll freeze their lists)
             _eventChannel.RaiseRewindStarted();
+
+            // Use only the debug rewinder *for now*
+            if (!_rbRewinderDebug.HasSnapshots)
+            {
+                Debug.LogWarning("[RewindInvoker] No snapshots on debug rewinder.");
+                _isRewinding = false;
+                return;
+            }
+
+            // IMPORTANT: directly use recorder’s own range
+            float startTime = _rbRewinderDebug.FirstSnapshotTime;
+            float endTime   = _rbRewinderDebug.LastSnapshotTime;
+
+            _rewindElapsed = 0f;
+
+            RewindRoutineAsync(startTime, endTime, _rewindCTS.Token).Forget();
         }
 
         private void StopRewind()
@@ -65,32 +90,41 @@ namespace RewindSystem
         }
 
     
-        private async UniTask RewindRoutineAsync(CancellationToken token)
+        private async UniTask RewindRoutineAsync(float startTime, float endTime, CancellationToken token)
         {
-            var rewindStartTime = Time.time;
+            // You already computed these correctly from recorder:
+            // startTime = FirstSnapshotTime
+            // endTime   = LastSnapshotTime
+
+            float currentTime = endTime;
             _rewindElapsed = 0f;
-            var endTime =(rewindStartTime - rewindEndTime)/_rewindSettings.RewindSpeed;
 
-                while (!token.IsCancellationRequested)
+            while (!token.IsCancellationRequested && currentTime > startTime)
+            {
+                token.ThrowIfCancellationRequested();
+
+                // Use physics timestep, not variable frame delta
+                float stepRecordedTime = Time.fixedDeltaTime * _rewindSettings.RewindSpeed;
+                _rewindElapsed += stepRecordedTime;
+                currentTime -= stepRecordedTime;
+
+                if (currentTime < startTime)
+                    currentTime = startTime;
+
+                _eventChannel.RaiseRewindTick(currentTime);
+
+                if (currentTime <= startTime)
                 {
-                    token.ThrowIfCancellationRequested();
-                  
-                    float step = Time.deltaTime * _rewindSettings.RewindSpeed;
-                    _rewindElapsed += step;
-                    float targetTime = rewindStartTime - _rewindElapsed; // for broadcasting
-
-
-                    endTime -= step; //for exiting
-                  
-                    if (endTime <= 0f)
-                    {
-                        await UniTask.NextFrame();  
-                        StopRewind();
-                    } 
-
-                    _eventChannel.RaiseRewindTick(targetTime);
-                    await UniTask.Yield(PlayerLoopTiming.Update);
+                    StopRewind();
+                    break;
                 }
+
+                // Run in the FixedUpdate loop, same as recording
+                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+            }
         }
+        
+        
+         
     }
 }

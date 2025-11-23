@@ -10,11 +10,20 @@ namespace RewindSystem.RigidbidyRewind
         [SerializeField] private RewindEventChannelSO _channel;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private RewindSettingsSO _rewindSettings;
+
+     
         
         private RigidbodyRecorder _recorder;
 
         private Vector3 _currentFrameVelocity;
         private Vector3 _currentFrameAngVelocity;
+        
+        
+        public bool HasSnapshots => _recorder.HasSnapshots;
+        public float FirstSnapshotTime => _recorder.FirstSnapshotTime;
+        public float LastSnapshotTime  => _recorder.LastSnapshotTime;
+        
+        
         
         private void OnValidate()
         {
@@ -49,6 +58,16 @@ namespace RewindSystem.RigidbidyRewind
         
         private void OnRewindTick(float time)
         {
+            
+            if (_recorder.HasSnapshots &&
+                (time < _recorder.FirstSnapshotTime || time > _recorder.LastSnapshotTime))
+            {
+                Debug.LogWarning(
+                    $"[RbRewinder:{name}] time out of range: {time:F3} " +
+                    $"(range {_recorder.FirstSnapshotTime:F3}–{_recorder.LastSnapshotTime:F3})");
+            }
+            
+            
              var snapshot = _recorder.FindClosestSnapshot(time);
              ApplySnapshot(snapshot);
         }

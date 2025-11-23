@@ -17,9 +17,13 @@ namespace RewindSystem
         [SerializeField] private CharacterTraceVisualizer _trace;
 
         private float _targetTime;
+
+        [SerializeField] private bool _isRewindEnabled = true;
         private void Awake()
         {
             _skinnedMeshRendererGhost.enabled = false;
+            
+            if(!_isRewindEnabled) return;
             _rewindEventChannel.OnRewindStart += StartRewind;
             _rewindEventChannel.OnRewindEnd += StopRewind;
             _rewindEventChannel.OnRewindTick += OnRewindTick;
