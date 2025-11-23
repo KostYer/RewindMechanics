@@ -34,6 +34,7 @@ namespace RewindSystem
             _skinnedMeshRenderer.enabled = false;
             _skinnedMeshRendererGhost.enabled = true;
             characterAnimationRewinder.OnRewindStart();
+        
             transformRewinder.OnRewindStart();
             _traceDrawer.StartDraw();
 
@@ -57,6 +58,7 @@ namespace RewindSystem
         private void OnRewindTick(float time)
         {
             transformRewinder.ApplyRewind(time);
+            characterAnimationRewinder.OnRewindTick(time);
             _targetTime = time;
         }
     }

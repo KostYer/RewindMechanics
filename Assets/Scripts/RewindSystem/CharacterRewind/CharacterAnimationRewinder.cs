@@ -82,8 +82,8 @@ namespace RewindSystem
             var clip = _clipCreator.CreateAnimationClipFromFrames(_animator, _animationRecorder.GetSnapshots(), _bonesProvider.BoneMap);
             _playableClip = AnimationClipPlayable.Create(_graph, clip);
             _playableClip.SetDuration(clip.length);
-            _playableClip.SetTime(clip.length);;
-            _playableClip.SetSpeed(_rewindSettings.RewindSpeed * -1f); 
+            _playableClip.SetTime(clip.length);
+            _playableClip.SetSpeed(_rewindSettings.RewindSpeed * -1f * _rewindSettings.CurveMultiplier); 
 
             _output.SetSourcePlayable(_playableClip);
             _graph.Play();
@@ -147,5 +147,9 @@ namespace RewindSystem
 #endif
         }
 
+        public void OnRewindTick(float time)
+        {
+            _playableClip.SetSpeed(_rewindSettings.RewindSpeed * -1f * _rewindSettings.CurveMultiplier); 
+        }
     }
 }

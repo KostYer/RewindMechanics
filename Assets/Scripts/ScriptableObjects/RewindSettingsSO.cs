@@ -10,7 +10,15 @@ namespace StarterAssets.ScriptableObjects
 
         public float RewindSpeed => _rewindSpeed;
         public float MaxTimeRecord => _maxTimeRecord;
+        public float CurveMultiplier => _curveMultiplier;
+        
+        
 
-        public static float Test = 1;
+        private float _curveMultiplier = 1;
+
+        public void SetCurveMultiplier(float mul)
+        {
+            _curveMultiplier = mul;
+        }
     }
 }

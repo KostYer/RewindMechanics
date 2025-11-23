@@ -10,6 +10,9 @@ namespace RewindSystem
     public class RewindInvoker: MonoSingleton<RewindInvoker>
     {
         public float RewindElapsed => _rewindElapsed;
+        
+        
+        
         [SerializeField] private RewindEventChannelSO _eventChannel;
         [SerializeField] private RewindSettingsSO _rewindSettings;
 
@@ -22,6 +25,8 @@ namespace RewindSystem
         
         
         private bool _isRewinding;
+
+     
         
         private CancellationTokenSource _rewindCTS;
 
@@ -116,6 +121,9 @@ namespace RewindSystem
                 // base step in recorded-time space, modulated by curve
                 float stepRecordedTime = Time.fixedDeltaTime * _rewindSettings.RewindSpeed * curveMultiplier;
 
+                _rewindSettings.SetCurveMultiplier(curveMultiplier);
+              
+                
                 _rewindElapsed += stepRecordedTime;
                 currentTime -= stepRecordedTime;
 
@@ -133,9 +141,5 @@ namespace RewindSystem
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             }
         }
-
-        
-        
-         
     }
 }
