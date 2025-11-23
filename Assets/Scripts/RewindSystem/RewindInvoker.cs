@@ -12,8 +12,9 @@ namespace RewindSystem
         public float RewindElapsed => _rewindElapsed;
         [SerializeField] private RewindEventChannelSO _eventChannel;
         [SerializeField] private RewindSettingsSO _rewindSettings;
- 
-        
+
+        [SerializeField] private bool _sampleCureve = true;
+        [SerializeField] private AnimationCurve _curve;
         
         [SerializeField] private RbRewinder _rbRewinderDebug;
         private float startTime;
@@ -92,19 +93,29 @@ namespace RewindSystem
     
         private async UniTask RewindRoutineAsync(float startTime, float endTime, CancellationToken token)
         {
-            // You already computed these correctly from recorder:
-            // startTime = FirstSnapshotTime
-            // endTime   = LastSnapshotTime
-
             float currentTime = endTime;
             _rewindElapsed = 0f;
+
+            // total "recorded" span we’re rewinding through
+            float recordedDuration = Mathf.Max(0.0001f, endTime - startTime);
 
             while (!token.IsCancellationRequested && currentTime > startTime)
             {
                 token.ThrowIfCancellationRequested();
 
-                // Use physics timestep, not variable frame delta
-                float stepRecordedTime = Time.fixedDeltaTime * _rewindSettings.RewindSpeed;
+                // 0 at start of rewind, 1 at the end of rewind
+                float normalized = Mathf.Clamp01(_rewindElapsed / recordedDuration);
+
+                // sample curve or just use 1
+                float curveMultiplier = 1f;
+                if (_sampleCureve && _curve != null)
+                {
+                    curveMultiplier = _curve.Evaluate(normalized);
+                }
+
+                // base step in recorded-time space, modulated by curve
+                float stepRecordedTime = Time.fixedDeltaTime * _rewindSettings.RewindSpeed * curveMultiplier;
+
                 _rewindElapsed += stepRecordedTime;
                 currentTime -= stepRecordedTime;
 
@@ -119,10 +130,10 @@ namespace RewindSystem
                     break;
                 }
 
-                // Run in the FixedUpdate loop, same as recording
                 await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
             }
         }
+
         
         
          
