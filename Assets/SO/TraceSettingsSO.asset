@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _traceUnitLifetime: 1
   _traceUnitSpawnRate: 0.15
-  _startingAlpha: 1
+  _startingAlpha: 0.5
   _traceColor: {r: 1, g: 1, b: 1, a: 1}
   _drawTrace: 1

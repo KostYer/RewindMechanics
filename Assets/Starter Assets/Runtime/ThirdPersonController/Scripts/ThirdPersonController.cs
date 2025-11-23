@@ -1,4 +1,5 @@
-﻿using StarterAssets.ScriptableObjects;
+﻿using System.Collections;
+using StarterAssets.ScriptableObjects;
 using UnityEngine;
 using UnityEngine.Serialization;
 #if ENABLE_INPUT_SYSTEM
@@ -98,6 +99,7 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        private int _animIDAttack01;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -178,11 +180,44 @@ namespace StarterAssets
             GroundedCheck();
             JumpAndGravity();
                 Move();
+
+
+                if (Input.GetKey(KeyCode.T))
+                {
+                    _animator.SetBool(_animIDAttack01, true);
+                 
+                }
+                
+                
+                if (Input.GetKey(KeyCode.V))
+                {
+                  StartCoroutine(BlendLayerWeight(1, 1, 1f));   
+                }
+        }
+        
+        private IEnumerator BlendLayerWeight(int layerIndex, float targetWeight, float duration)
+        {
+            Debug.Log($"[BlendLayerWeight]");
+            float startWeight = _animator.GetLayerWeight(layerIndex);
+            float timer = 0f;
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                float t = timer / duration;
+                float newWeight = Mathf.Lerp(startWeight, targetWeight, t);
+                _animator.SetLayerWeight(layerIndex, newWeight);
+                yield return null;
+            }
+
+            _animator.SetLayerWeight(layerIndex, targetWeight);
         }
 
         private void LateUpdate()
         {
             CameraRotation();
+            
+            _animator.SetBool(_animIDAttack01, false);
         }
 
         private void AssignAnimationIDs()
@@ -192,6 +227,7 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            _animIDAttack01 = Animator.StringToHash("Attack_01");
         }
 
         private void GroundedCheck()
