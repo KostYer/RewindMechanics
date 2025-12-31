@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Recorders;
 using RewindSystem.RuntimeAnimation;
 using Starter_Assets.Runtime.ThirdPersonController.Scripts.RewindSystem.Recorders;
@@ -59,7 +60,17 @@ namespace RewindSystem
             _output = AnimationPlayableOutput.Create(_graph, "Animation", ghostAnimator);
             ConstructDebugDictionary();
         }
-   
+
+        
+        private void Update()
+        {
+            if(!_isRewinding) return;
+
+            ghostAnimator.transform.position = transform.position;
+            ghostAnimator.transform.rotation = transform.rotation;
+
+        }
+
         public void OnRewindStart()
         {
             _animationRecorder.StopRecording();

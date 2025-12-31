@@ -5,7 +5,7 @@ namespace Abilities
     public class Projectile: MonoBehaviour
     {
         private float _explodeForce;
-        private float _explosionRadius = 10f;
+        private float _explosionRadius = 2f;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private LayerMask _affectsLayers;
 

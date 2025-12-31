@@ -7,6 +7,7 @@ namespace RewindSystem
     {
        [SerializeField] private CharacterController _controller;
        [SerializeField] private RewindSettingsSO _rewindSettings;
+       [SerializeField] private Transform _target;
        private TransformRecorder _transformRecorder;  
 
         private void Start()
@@ -38,8 +39,8 @@ namespace RewindSystem
                     var b = _transformRecorder.Snapshots[i - 1];
 
                     float t = Mathf.InverseLerp(a.time, b.time, currentRewindTime);
-                    _controller.transform.position = Vector3.Lerp(a.position, b.position, t);
-                    _controller.transform.rotation = Quaternion.Slerp(a.rotation, b.rotation, t);
+                    _target.position = Vector3.Lerp(a.position, b.position, t);
+                    _target.rotation = Quaternion.Slerp(a.rotation, b.rotation, t);
                     break;
                 }
             }
