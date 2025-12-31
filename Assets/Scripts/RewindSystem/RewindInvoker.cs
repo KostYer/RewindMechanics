@@ -99,37 +99,28 @@ namespace RewindSystem
         private async UniTask RewindRoutineAsync(float startTime, float endTime, CancellationToken token)
         {
             float currentTime = endTime;
-            _rewindElapsed = 0f;
-
-            // total "recorded" span we’re rewinding through
             float recordedDuration = Mathf.Max(0.0001f, endTime - startTime);
+            _rewindElapsed = 0f;
 
             while (!token.IsCancellationRequested && currentTime > startTime)
             {
                 token.ThrowIfCancellationRequested();
 
-                // 0 at start of rewind, 1 at the end of rewind
                 float normalized = Mathf.Clamp01(_rewindElapsed / recordedDuration);
 
-                // sample curve or just use 1
                 float curveMultiplier = 1f;
                 if (_sampleCureve && _curve != null)
-                {
                     curveMultiplier = _curve.Evaluate(normalized);
-                }
 
-                // base step in recorded-time space, modulated by curve
-                float stepRecordedTime = Time.fixedDeltaTime * _rewindSettings.RewindSpeed * curveMultiplier;
+                // IMPORTANT: frame clock, not fixed
+                float stepRecordedTime = Time.deltaTime * _rewindSettings.RewindSpeed * curveMultiplier;
 
                 _rewindSettings.SetCurveMultiplier(curveMultiplier);
-              
-                
+
                 _rewindElapsed += stepRecordedTime;
-                currentTime -= stepRecordedTime;
+                currentTime = Mathf.Max(startTime, currentTime - stepRecordedTime);
 
-                if (currentTime < startTime)
-                    currentTime = startTime;
-
+                // Apply BEFORE Cinemachine LateUpdate runs
                 _eventChannel.RaiseRewindTick(currentTime);
 
                 if (currentTime <= startTime)
@@ -138,7 +129,7 @@ namespace RewindSystem
                     break;
                 }
 
-                await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+                await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
             }
         }
     }
