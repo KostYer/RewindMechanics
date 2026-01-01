@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Cinemachine;
 using Cysharp.Threading.Tasks;
 using RewindSystem.RigidbidyRewind;
 using StarterAssets.ScriptableObjects;
@@ -20,13 +21,15 @@ namespace RewindSystem
         [SerializeField] private AnimationCurve _curve;
         
         [SerializeField] private RbRewinder _rbRewinderDebug;
+        [SerializeField] private CameraTargetSmooth _cameraSmoothMover;
+        
         private float startTime;
         private float endTime;
         
         
         private bool _isRewinding;
 
-     
+        [SerializeField] private CinemachineBrain _brain;
         
         private CancellationTokenSource _rewindCTS;
 
@@ -36,6 +39,15 @@ namespace RewindSystem
         private void Start()
         {
             rewindEndTime = Time.time;
+        }
+        
+        private void LateUpdate()
+        {
+            if (!_isRewinding) return;
+
+            // 1) Apply rewind pose(s) here (player/proxy)
+            // 2) Then update Cinemachine after the pose is final:
+            _brain.ManualUpdate();
         }
 
         private void Update()
@@ -55,6 +67,7 @@ namespace RewindSystem
         {
             if (_isRewinding) return;
 
+            _cameraSmoothMover.OnRewind(true);
             _rewindCTS?.Cancel();
             _rewindCTS?.Dispose();
             _rewindCTS = new CancellationTokenSource();
@@ -85,6 +98,8 @@ namespace RewindSystem
         {
             if(!_isRewinding) return;
            
+            _cameraSmoothMover.OnRewind(false);
+            
             _rewindCTS?.Cancel();
             _rewindCTS?.Dispose();
             _rewindCTS = null;
@@ -129,7 +144,7 @@ namespace RewindSystem
                     break;
                 }
 
-                await UniTask.Yield(PlayerLoopTiming.PreLateUpdate, token);
+                await UniTask.Yield(PlayerLoopTiming.EarlyUpdate, token);
             }
         }
     }
