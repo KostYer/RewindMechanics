@@ -15,12 +15,16 @@ namespace Abilities
             var go = Instantiate(_projectile, _shootPoint.position, _shootPoint.rotation);
             var force = transform.forward * _speed;
             go.OnShoot(force, _explodeForce);
+            
+            go.SetTarget(transform);
         }
+         
 
 
         public void OnFireAnimCallback()
         {
             Shoot();
+         
         }
 
 

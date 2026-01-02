@@ -1,9 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Abilities
 {
     public class Projectile: MonoBehaviour
     {
+        [SerializeField] private Transform _lookTarget;
+        [SerializeField] private GameObject _impactQuad; 
         private float _explodeForce;
         private float _explosionRadius = 2f;
         [SerializeField] private Rigidbody _rb;
@@ -23,8 +26,21 @@ namespace Abilities
 
         private void OnTriggerEnter(Collider other)
         {
+            Debug.Log($"[Projectile] OnTriggerEnter");
+            
             Explode();
+            
+            Vector3 pos = other.ClosestPoint(transform.position);
+            ShowImpact(pos);
+
         }
+
+        public void SetTarget(Transform target)
+        {
+            _lookTarget = target;
+        }
+
+      
 
         private void Explode()
         {
@@ -44,7 +60,15 @@ namespace Abilities
                     ForceMode.Impulse
                 );
             }
+          
             Destroy(gameObject);
+        }
+
+        private void ShowImpact(Vector3 pos)
+        {
+            var go = Instantiate(_impactQuad, pos, Quaternion.identity);
+            
+           
         }
     }
 }
