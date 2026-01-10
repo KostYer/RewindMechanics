@@ -100,7 +100,7 @@ Material:
     - _AlphaCutoff: 0.5
     - _AlphaToMask: 0
     - _Alpha_Mask_Power: 0.5
-    - _Animation: 2
+    - _Animation: 1
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -111,7 +111,7 @@ Material:
     - _Debug: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _Distortion: 0.053
+    - _Distortion: 1
     - _DistortionDepthFade: 7.86
     - _DistortionDepthFadePower: 9.24
     - _DistortionNormalStrength: 1
@@ -119,6 +119,7 @@ Material:
     - _Distortion_Max: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
+    - _EffectFade: 1
     - _EnvironmentReflections: 1
     - _Float0: 0
     - _Float1: 1
@@ -145,7 +146,7 @@ Material:
     - _NormalizedDistortion: 0
     - _OcclusionStrength: 1
     - _OuterRadialDistortionMaskPower: 13.94
-    - _OuterRadialDistortionMaskRemapMax: 0.5
+    - _OuterRadialDistortionMaskRemapMax: 0.508
     - _OuterRadialDistortionMaskRemapMin: 0
     - _Outer_Feather: 0.25
     - _Outer_Remap_Max: 0.2

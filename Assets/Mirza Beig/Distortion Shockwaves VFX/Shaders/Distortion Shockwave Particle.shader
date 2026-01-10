@@ -29,7 +29,7 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 		_RadialAlphaMaskPower("Radial Alpha Mask Power", Range( 0.01 , 1)) = 0.01
 		[Header(Debug)][Space(5)]_Debug("Debug", Range( 0 , 1)) = 0
 
-
+          _EffectFade("Effect Fade", Range(0,1)) = 1
 		//_TessPhongStrength( "Tess Phong Strength", Range( 0, 1 ) ) = 0.5
 		//_TessValue( "Tess Max Tessellation", Range( 1, 32 ) ) = 16
 		//_TessMin( "Tess Min Distance", Float ) = 10
@@ -290,6 +290,7 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 			float _WaveSmoothness;
 			float _ParticleRandomize;
 			float _ParticleAnimation;
+			float _EffectFade;
 			float _Animation;
 			float _Tiling;
 			float _InnerRadialDistortionMaskasAlphaPower;
@@ -523,7 +524,7 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 				float3 localUnity_NormalFromHeight_Tangent1_g5 = Unity_NormalFromHeight_Tangent( in1_g5 , strength1_g5 , position1_g5 , tangentMatrix1_g5 );
 				float3 Shockwave_Tangent_Normals36 = localUnity_NormalFromHeight_Tangent1_g5;
 				float Particle_Distortion_over_Lifetime130 = IN.ase_texcoord4.w;
-				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 ) , 0.0 ) ).xy ), 1.0 );
+				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 * _EffectFade ) , 0.0 ) ).xy ), 1.0 );
 				float4 Screen_Colour90 = ( fetchOpaqueVal10 * _Colour * IN.ase_color );
 				float Debug_Heightmap156 = ( saturate( Shockwaves33 ) * temp_output_81_0 );
 				float4 temp_cast_2 = (Debug_Heightmap156).xxxx;
@@ -883,13 +884,15 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 				float3 localUnity_NormalFromHeight_Tangent1_g5 = Unity_NormalFromHeight_Tangent( in1_g5 , strength1_g5 , position1_g5 , tangentMatrix1_g5 );
 				float3 Shockwave_Tangent_Normals36 = localUnity_NormalFromHeight_Tangent1_g5;
 				float Particle_Distortion_over_Lifetime130 = IN.ase_texcoord2.w;
-				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 ) , 0.0 ) ).xy ), 1.0 );
+				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 * 0) , 0.0 ) ).xy ), 1.0 );
 				float4 Screen_Colour90 = ( fetchOpaqueVal10 * _Colour * IN.ase_color );
 				float lerpResult163 = lerp( 1.0 , pow( Inner_Radial_Distortion_Mask118 , _InnerRadialDistortionMaskasAlphaPower ) , _InnerRadialDistortionMaskasAlpha);
 				float Alpha88 = ( pow( smoothstepResult100 , _RadialAlphaMaskPower ) * Screen_Colour90.a * lerpResult163 );
 				
 
-				float Alpha = Alpha88;
+			 	float Alpha = Alpha88;
+			 
+				
 				float AlphaClipThreshold = 0.5;
 
 				#ifdef _ALPHATEST_ON
@@ -1201,7 +1204,7 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 				float3 localUnity_NormalFromHeight_Tangent1_g5 = Unity_NormalFromHeight_Tangent( in1_g5 , strength1_g5 , position1_g5 , tangentMatrix1_g5 );
 				float3 Shockwave_Tangent_Normals36 = localUnity_NormalFromHeight_Tangent1_g5;
 				float Particle_Distortion_over_Lifetime130 = IN.ase_texcoord.w;
-				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 ) , 0.0 ) ).xy ), 1.0 );
+				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 * 0 ) , 0.0 ) ).xy ), 1.0 );
 				float4 Screen_Colour90 = ( fetchOpaqueVal10 * _Colour * IN.ase_color );
 				float lerpResult163 = lerp( 1.0 , pow( Inner_Radial_Distortion_Mask118 , _InnerRadialDistortionMaskasAlphaPower ) , _InnerRadialDistortionMaskasAlpha);
 				float Alpha88 = ( pow( smoothstepResult100 , _RadialAlphaMaskPower ) * Screen_Colour90.a * lerpResult163 );
@@ -1522,7 +1525,7 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 				float3 localUnity_NormalFromHeight_Tangent1_g5 = Unity_NormalFromHeight_Tangent( in1_g5 , strength1_g5 , position1_g5 , tangentMatrix1_g5 );
 				float3 Shockwave_Tangent_Normals36 = localUnity_NormalFromHeight_Tangent1_g5;
 				float Particle_Distortion_over_Lifetime130 = IN.ase_texcoord.w;
-				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 ) , 0.0 ) ).xy ), 1.0 );
+				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 * 0 ) , 0.0 ) ).xy ), 1.0 );
 				float4 Screen_Colour90 = ( fetchOpaqueVal10 * _Colour * IN.ase_color );
 				float lerpResult163 = lerp( 1.0 , pow( Inner_Radial_Distortion_Mask118 , _InnerRadialDistortionMaskasAlphaPower ) , _InnerRadialDistortionMaskasAlpha);
 				float Alpha88 = ( pow( smoothstepResult100 , _RadialAlphaMaskPower ) * Screen_Colour90.a * lerpResult163 );
@@ -1857,7 +1860,7 @@ Shader "Mirza Beig/Distortion Shockwave Particle"
 				float3 localUnity_NormalFromHeight_Tangent1_g5 = Unity_NormalFromHeight_Tangent( in1_g5 , strength1_g5 , position1_g5 , tangentMatrix1_g5 );
 				float3 Shockwave_Tangent_Normals36 = localUnity_NormalFromHeight_Tangent1_g5;
 				float Particle_Distortion_over_Lifetime130 = IN.ase_texcoord1.w;
-				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 ) , 0.0 ) ).xy ), 1.0 );
+				float4 fetchOpaqueVal10 = float4( SHADERGRAPH_SAMPLE_SCENE_COLOR( ( ase_screenPosNorm + float4( ( Shockwave_Tangent_Normals36 * _Distortion * Particle_Distortion_over_Lifetime130 * 0) , 0.0 ) ).xy ), 1.0 );
 				float4 Screen_Colour90 = ( fetchOpaqueVal10 * _Colour * IN.ase_color );
 				float lerpResult163 = lerp( 1.0 , pow( Inner_Radial_Distortion_Mask118 , _InnerRadialDistortionMaskasAlphaPower ) , _InnerRadialDistortionMaskasAlpha);
 				float Alpha88 = ( pow( smoothstepResult100 , _RadialAlphaMaskPower ) * Screen_Colour90.a * lerpResult163 );

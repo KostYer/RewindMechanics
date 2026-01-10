@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2970127621758340223}
   - component: {fileID: 2090778064305673365}
   - component: {fileID: 9116193712524088949}
-  - component: {fileID: 8706540087918264927}
+  - component: {fileID: -6952954040825639728}
   m_Layer: 0
   m_Name: DistortionQuad
   m_TagString: Untagged
@@ -103,7 +103,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -125,7 +125,7 @@ MonoBehaviour:
   _color: {r: 0.9433962, g: 0.25364897, b: 0.25364897, a: 1}
   _lineColor: {r: 1, g: 0.81785923, b: 0.033018887, a: 1}
   _len: 1
---- !u!114 &8706540087918264927
+--- !u!114 &-6952954040825639728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,8 +134,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 8758075118033614226}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 471f30442649bcd40a5b3b201950255f, type: 3}
+  m_Script: {fileID: 11500000, guid: b2b84932099e422dbd80bee1af6873c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _isEnabled: 1
-  _lifetime: 0.5
+  _lifetime: 0.3
+  _lifeSpanDebug: 20
+  _alpha: 1
+  _fadeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  _isDebug: 0
