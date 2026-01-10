@@ -11,6 +11,7 @@ namespace RewindSystem
     public class RewindInvoker: MonoSingleton<RewindInvoker>
     {
         public float RewindElapsed => _rewindElapsed;
+        public float CurrentTime => _currentTime;
         
         
         
@@ -19,12 +20,14 @@ namespace RewindSystem
 
         [SerializeField] private bool _sampleCureve = true;
         [SerializeField] private AnimationCurve _curve;
+        [SerializeField] private AnimationCurve _curveBackup;
         
         [SerializeField] private RbRewinder _rbRewinderDebug;
         [SerializeField] private CameraTargetSmooth _cameraSmoothMover;
         
         private float startTime;
         private float endTime;
+        private float _currentTime;
         
         
         private bool _isRewinding;
@@ -134,13 +137,15 @@ namespace RewindSystem
 
                 _rewindElapsed += stepRecordedTime;
                 currentTime = Mathf.Max(startTime, currentTime - stepRecordedTime);
-
+                _currentTime = currentTime;
                 // Apply BEFORE Cinemachine LateUpdate runs
                 _eventChannel.RaiseRewindTick(currentTime);
 
                 if (currentTime <= startTime)
                 {
+                   
                     StopRewind();
+                    _currentTime = -1f;
                     break;
                 }
 

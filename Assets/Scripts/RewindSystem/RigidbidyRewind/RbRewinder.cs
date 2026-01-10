@@ -20,6 +20,7 @@ namespace RewindSystem.RigidbidyRewind
         
         
         public bool HasSnapshots => _recorder.HasSnapshots;
+        
         public float FirstSnapshotTime => _recorder.FirstSnapshotTime;
         public float LastSnapshotTime  => _recorder.LastSnapshotTime;
         

@@ -79,7 +79,6 @@ namespace Starter_Assets.Runtime.ThirdPersonController.Scripts.RewindSystem.Reco
 
         public void StartRecording()
         {
-         
             Clear();
             _tokenSource?.Cancel();  
             _tokenSource?.Dispose();
