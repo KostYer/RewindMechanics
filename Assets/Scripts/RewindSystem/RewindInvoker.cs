@@ -23,7 +23,6 @@ namespace RewindSystem
         [SerializeField] private AnimationCurve _curveBackup;
         
         [SerializeField] private RbRewinder _rbRewinderDebug;
-        [SerializeField] private CameraTargetSmooth _cameraSmoothMover;
         
         private float startTime;
         private float endTime;
@@ -70,7 +69,6 @@ namespace RewindSystem
         {
             if (_isRewinding) return;
 
-            _cameraSmoothMover.OnRewind(true);
             _rewindCTS?.Cancel();
             _rewindCTS?.Dispose();
             _rewindCTS = new CancellationTokenSource();
@@ -101,8 +99,6 @@ namespace RewindSystem
         {
             if(!_isRewinding) return;
            
-            _cameraSmoothMover.OnRewind(false);
-            
             _rewindCTS?.Cancel();
             _rewindCTS?.Dispose();
             _rewindCTS = null;
