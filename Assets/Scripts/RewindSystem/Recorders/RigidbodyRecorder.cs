@@ -13,6 +13,12 @@ namespace Recorders
         public bool HasSnapshots => _snapshots.Count > 0;
         
         private float _localTime;
+        
+        public float MaxDuration { get; set; }
+        private Rigidbody _rb;
+        private List<RbSnapshot> _snapshots = new List<RbSnapshot>();
+      
+        private CancellationTokenSource _tokenSource;
 
         public float FirstSnapshotTime
         {
@@ -33,12 +39,6 @@ namespace Recorders
                 return _snapshots[^1].Time;
             }
         }
-        
-        public float MaxDuration { get; set; }
-        private Rigidbody _rb;
-        private List<RbSnapshot> _snapshots = new List<RbSnapshot>();
-      
-        private CancellationTokenSource _tokenSource;
 
         public RigidbodyRecorder(Rigidbody rb, float maxDuration)
         {
@@ -150,6 +150,8 @@ namespace Recorders
 
         private void AddSnapshot(float t)
         {
+            if(_rb == null) return;
+            
             _snapshots.Add(new RbSnapshot {
                 Time = t,
                 Position = _rb.position,
@@ -158,7 +160,5 @@ namespace Recorders
                 AngularVelocity = _rb.angularVelocity
             });
         }
-        
-        
     }
 }

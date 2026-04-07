@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 3158699240263413719}
   - component: {fileID: 8700245297735743968}
   - component: {fileID: 1890775360519989867}
+  - component: {fileID: 6066727167885510420}
+  - component: {fileID: 1690033354988054834}
   m_Layer: 7
   m_Name: SphereProjectile
   m_TagString: Untagged
@@ -154,3 +156,33 @@ MonoBehaviour:
   _impactQuad: {fileID: 8758075118033614226, guid: 0565431c5e0451e46930dcde88a56394,
     type: 3}
   _eventChannel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
+  _collider: {fileID: 3158699240263413719}
+--- !u!114 &6066727167885510420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6265801513864998844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f9b839b79234429b3b1eecd10e1ba96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _channel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
+  _rb: {fileID: 8700245297735743968}
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
+--- !u!114 &1690033354988054834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6265801513864998844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f9bd5ce7144ca4b059f470fa4ba558, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _eventChannel: {fileID: 11400000, guid: a5efd34edd6cd3648a8ef31ddd8527e8, type: 2}
+  _projectile: {fileID: 1890775360519989867}

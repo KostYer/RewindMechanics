@@ -28,7 +28,7 @@ namespace RewindSystem.Recorders
         }
 
         private void OnRewindTick(float t)
-        {
+        {return;
             if (_snapshots.Count == 0)
                 return;
 

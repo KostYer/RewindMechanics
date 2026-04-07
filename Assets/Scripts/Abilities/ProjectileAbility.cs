@@ -12,15 +12,22 @@ namespace Abilities
         [SerializeField] private Projectile _projectile;
 
         [SerializeField] private RewindEventChannelSO _eventChannel;
+        [SerializeField] private ProjectileTimelineManager _timelineManager;
         
         private void Shoot()
         {
            // _eventChannel.OnGizmosRequested( _shootPoint.position, Color.cyan, .5f); 
-            var go = Instantiate(_projectile, _shootPoint.position, _shootPoint.rotation);
-            var force = transform.forward * _speed;
-            go.OnShoot(force, _explodeForce);
+            var projectile = Instantiate(_projectile, _shootPoint.position, _shootPoint.rotation);
+
+         
+            float time = Time.time;
+            var track = _timelineManager.RegisterProjectile(projectile, projectile.Rigidbody, time);
+            projectile.BindTrack(track.Id, _timelineManager);
             
-            go.SetTarget(transform);
+            var force = transform.forward * _speed;
+            projectile.OnShoot(force, _explodeForce);
+            
+            projectile.SetTarget(transform);
         }
          
 

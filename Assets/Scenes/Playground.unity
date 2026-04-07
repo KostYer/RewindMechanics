@@ -17446,7 +17446,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   _rbRewinderDebug: {fileID: 1068789146}
-  _cameraSmoothMover: {fileID: 0}
   _brain: {fileID: 1892117427}
 --- !u!4 &1075061310
 Transform:
@@ -25195,6 +25194,11 @@ PrefabInstance:
       propertyPath: _explodeForce
       value: 66
       objectReference: {fileID: 0}
+    - target: {fileID: -1351370937898105868, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      propertyPath: _timelineManager
+      value: 
+      objectReference: {fileID: 1762682291}
     - target: {fileID: 3893294197879345259, guid: 64dce48905ffd9b4293e595fa6941544,
         type: 3}
       propertyPath: m_RootOrder
@@ -25354,6 +25358,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1762682287}
+    - targetCorrespondingSourceObject: {fileID: 4416926081852918481, guid: 64dce48905ffd9b4293e595fa6941544,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1762682291}
   m_SourcePrefab: {fileID: 100100000, guid: 64dce48905ffd9b4293e595fa6941544, type: 3}
 --- !u!114 &1762682259 stripped
 MonoBehaviour:
@@ -25413,6 +25421,19 @@ MonoBehaviour:
   - m_Rig: {fileID: 3208431}
     m_Active: 0
   m_Effectors: []
+--- !u!114 &1762682291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399180431}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d1b21f4bf1b8e54c943b3ad7ecb1b02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rewindSettings: {fileID: 11400000, guid: 3eb1ccba23f190b4ea144a9ff102f72b, type: 2}
 --- !u!1 &1764214107
 GameObject:
   m_ObjectHideFlags: 0

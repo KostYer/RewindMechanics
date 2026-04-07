@@ -13,6 +13,8 @@ namespace StarterAssets.ScriptableObjects
         public event Action<Vector3> OnImpact;
         public event Action<ProjectileData> OnBulletEnd;
         public event Action<GizmosRequest> OnGizmosRequest;
+        public event Action  OnRbDestroyed = default;
+        
 
         public void RaiseRewindStarted() => OnRewindStart?.Invoke();
         public void RaiseRewindEnded() => OnRewindEnd?.Invoke();
